@@ -103,7 +103,7 @@ No NFD or other auxiliary regularization term is used.
 * Result (best-val checkpoint = epoch 19): **val CPM 0.632, test CPM 0.675** (sens@1 FP/scan 0.661 / 0.695; max sens 0.958 / 0.962; random-score floor ≈ 0.005–0.007). Single seed, 118/105 nodules → differences of a few CPM points are within noise; add bootstrap CI before concluding anything from small differences. Test scored once (`scripts/evaluate.py`).
 * Efficiency: 302,228 params; CPU latency 1.77 ± 0.34 ms (batch 1), 160.8 ms (batch 256); MPS 24.2 ms (batch 256). FLOPs not measured yet.
 * Bug found by test: flips/rot90 pivot about (P−1)/2 but the patch centre is pixel P/2 → 1-px shift of image vs box; fixed with a roll after each op (tests added).
-* Experiment folder: `experiments/baseline/EXP-001-baseline-2d/` (config.yaml, history.csv, metrics.json, training.log tracked; *.pt git-ignored). Predictions in `results/predictions/` (ignored). Never overwrite experiments: Trainer refuses an existing folder.
+* Experiment folder: `experiments/baseline/EXP-001-baseline-2d/` (config.yaml, history.csv, metrics.json, froc_*.csv tracked; *.pt and training.log git-ignored). Predictions in `results/predictions/` (ignored). Never overwrite experiments: Trainer refuses an existing folder.
 * Run: `python scripts/train.py configs/experiments/baseline.yaml baseline` then `python scripts/evaluate.py experiments/baseline/EXP-001-baseline-2d`.
 
 ---
