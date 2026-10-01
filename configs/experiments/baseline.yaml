@@ -1,0 +1,41 @@
+# EXP-001-baseline-2d : single-slice (2D) CNN candidate classifier + box regression.
+# Values are baseline settings, not tuned results.
+experiment:
+  name: EXP-001-baseline-2d
+  seed: 42
+
+data:
+  cache_dir: data/processed
+  channels: [2]           # centre slice of the cached 5-slice patches (2D baseline)
+  pos_repeat: 10          # positives repeated per epoch (each with a different random augmentation)
+  augment: dihedral       # flips + 90deg rotations (box targets adjusted)
+
+model:
+  backbone: simple_cnn
+  in_channels: 1
+  widths: [16, 32, 64, 128]
+  head_hidden: 64
+  dropout: 0.2
+
+training:
+  batch_size: 256
+  epochs: 20
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler: cosine
+  selection_metric: val_cpm   # checkpoint chosen on the validation split only
+
+loss:
+  lambda_cls: 1.0
+  lambda_loc: 1.0
+  focal_alpha: 0.25
+  focal_gamma: 2.0
+
+evaluation:
+  annotations: data/annotations.csv
+  excluded: data/annotations/annotations_excluded.csv
+  splits_dir: data/splits
+  max_marks_per_scan: 100   # as in the official LUNA16 script
+
+pruning:
+  enabled: false

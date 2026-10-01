@@ -40,7 +40,10 @@ pytest
 
 ## Status
 
-Phases 0–3 complete. Next: Phase 4 — 2D baseline.
+Phases 0–4 complete. Next: Phase 5 — 2.5D data pipeline.
+
+2D baseline (EXP-001): val CPM 0.632 / test CPM 0.675 (official LUNA16 FROC/CPM, single seed). See `notebooks/03_baseline_analysis.ipynb`.
 
 Dataset validation: `python scripts/validate_dataset.py` (outputs in `data/metadata/`, splits in `data/splits/`).
+Baseline: `python scripts/build_patch_cache.py`, `python scripts/train.py configs/experiments/baseline.yaml baseline`, `python scripts/evaluate.py experiments/baseline/EXP-001-baseline-2d`; evaluation check: `python scripts/validate_evaluation.py`.
 Preprocessing: `python scripts/build_candidate_index.py`, `python scripts/validate_preprocessing.py` (see `configs/preprocessing.yaml`). See [memory.md](memory.md).

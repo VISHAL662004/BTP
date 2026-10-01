@@ -19,13 +19,13 @@ The AI should update this file whenever a significant project decision, implemen
 
 # Current State
 
-**Phase:** Phase 4 — 2D Baseline (not started)
+**Phase:** Phase 5 — 2.5D Data Pipeline (not started)
 
-**Completed:** Phases 0, 1, 2, 3
+**Completed:** Phases 0, 1, 2, 3, 4 (Gate 1 passed; 2D baseline established)
 
 **In Progress:** None
 
-**Next Task:** Begin Phase 4 — 2D baseline (dataset, simple 2D model, training, detection evaluation). Validate FROC/CPM against the official script in `data/evaluationScript.zip` (extract to scratch/outside git; note it expects candidates CSV format seriesuid,coordX,coordY,coordZ,probability).
+**Next Task:** Phase 5 — 2.5D pipeline. Most of it already exists (`extract_25d_patch`, 5-slice patch cache, `slice_stride`); remaining: verify slice order/boundaries/annotation alignment on the cache, visualize 2D vs 2.5D samples, and compare. Phase 6 trains the 2.5D CNN on `channels: null` (all 5) with identical settings and also reports 1/3/5 slices.
 
 ---
 
@@ -92,6 +92,19 @@ No NFD or other auxiliary regularization term is used.
 * Candidate index: `data/candidates/candidate_index.csv` (candidates_V2 + split + canonical voxel coords + in_lung flag; git-ignored, rebuild with `scripts/build_candidate_index.py`). Train 604,563 cands/1,218 pos; val 74,488/195; test 75,924/144. 99.7% of candidates (and all but 4 of 1,557 positives) lie in the 5 mm-dilated lung mask.
 * Validation (`scripts/validate_preprocessing.py`, 41 scans/79 nodules): 91% of annotation sites dense (>-500 HU mean in 1.5 mm sphere) vs 3.8% for random lung voxels; flipped scans 100% aligned vs 58% at mirrored position; 100% inside dilated lung. Remaining ~9% plausibly ground-glass nodules. Visual check in `notebooks/02_preprocessing_validation.ipynb`.
 * Bug fixed during phase: canonical origin shift must apply only to axes with negative direction sign (regression test added).
+
+---
+
+# 2D Baseline (Phase 4 results) — EXP-001-baseline-2d
+
+* Formulation: **candidate scoring** on the supplied LUNA16 `candidates_V2` (official FROC protocol), not full-scan detection. Model: SimpleCNN (4 conv blocks 16-32-64-128, 302,228 params, 1.2 MB), single centre slice of the 5-slice patch, objectness logit + box (dx, dy, log d). Loss `L_det = 1.0·focal(α .25, γ 2) + 1.0·(1−IoU)` (IoU only on positives with a matched nodule box). AdamW 1e-3, wd 1e-4, cosine, batch 256, 20 epochs, seed 42, MPS. Augmentation: D4 flips/rot90 with box-offset adjustment (positives repeated ×10/epoch).
+* Patch cache `data/processed/` (4.1 GB, git-ignored; rebuild `scripts/build_patch_cache.py`, ~18 min): train = all 1,218 positives + 60,000 seeded random negatives; val/test = ALL candidates (74,488 / 75,924). uint8 quantization of the [0,1] window (5.5 HU steps). Positive candidates carry the matched nodule box.
+* Evaluation `src/evaluation/froc.py`: Python-3 port of the official script, validated by `scripts/validate_evaluation.py` (all counts match the official example output exactly; CPM identical to 6 d.p.). Default = shipped-script protocol (excluded findings radius 5 mm; ≤100 marks/scan); `legacy=True` reproduces the bundled example (older script: excluded radius 0.5 mm, no cap). CPM = mean sensitivity at 1/8,1/4,1/2,1,2,4,8 FP/scan.
+* Result (best-val checkpoint = epoch 19): **val CPM 0.632, test CPM 0.675** (sens@1 FP/scan 0.661 / 0.695; max sens 0.958 / 0.962; random-score floor ≈ 0.005–0.007). Single seed, 118/105 nodules → differences of a few CPM points are within noise; add bootstrap CI before concluding anything from small differences. Test scored once (`scripts/evaluate.py`).
+* Efficiency: 302,228 params; CPU latency 1.77 ± 0.34 ms (batch 1), 160.8 ms (batch 256); MPS 24.2 ms (batch 256). FLOPs not measured yet.
+* Bug found by test: flips/rot90 pivot about (P−1)/2 but the patch centre is pixel P/2 → 1-px shift of image vs box; fixed with a roll after each op (tests added).
+* Experiment folder: `experiments/baseline/EXP-001-baseline-2d/` (config.yaml, history.csv, metrics.json, training.log tracked; *.pt git-ignored). Predictions in `results/predictions/` (ignored). Never overwrite experiments: Trainer refuses an existing folder.
+* Run: `python scripts/train.py configs/experiments/baseline.yaml baseline` then `python scripts/evaluate.py experiments/baseline/EXP-001-baseline-2d`.
 
 ---
 

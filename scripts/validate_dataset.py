@@ -48,6 +48,12 @@ def main():
     cand2 = load_candidates(DATA / "candidates" / "candidates_V2.csv")
     issues += V.check_candidates(cand2, ann, scan_df, "candidates_V2")
 
+    # official evaluation inputs (excluded findings, scan list) used by src/evaluation/froc.py
+    with zipfile.ZipFile(DATA / "evaluationScript.zip") as z:
+        (DATA / "annotations").mkdir(exist_ok=True)
+        for n in ("annotations_excluded.csv", "seriesuids.csv"):
+            (DATA / "annotations" / n).write_bytes(z.read(f"evaluationScript/annotations/{n}"))
+
     # lung segmentation masks
     with zipfile.ZipFile(DATA / "seg-lungs-LUNA16.zip") as z:
         seg = {Path(n).stem for n in z.namelist() if n.endswith(".mhd")}
