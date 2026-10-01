@@ -40,4 +40,6 @@ pytest
 
 ## Status
 
-Phases 0–1 complete. Next: Phase 2 — dataset understanding and validation. See [memory.md](memory.md).
+Phases 0–2 complete. Next: Phase 3 — CT preprocessing.
+
+Dataset validation: `python scripts/validate_dataset.py` (outputs in `data/metadata/`, splits in `data/splits/`). See [memory.md](memory.md).

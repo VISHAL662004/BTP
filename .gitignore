@@ -27,6 +27,8 @@ data/*
 !data/candidates.csv
 !data/candidates_V2.csv
 !data/sampleSubmission.csv
+!data/metadata/
+!data/splits/
 data/raw/
 data/processed/
 data/candidates/
