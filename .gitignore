@@ -1,0 +1,57 @@
+# ---- OS / editor ----
+.DS_Store
+.vscode/
+.idea/
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+.mypy_cache/
+.ruff_cache/
+
+# ---- Environments ----
+.env
+.venv/
+venv/
+env/
+.conda/
+
+# ---- Dataset (LUNA16, ~60 GB; never commit raw/processed CT) ----
+data/*
+!data/.gitkeep
+!data/annotations.csv
+!data/candidates.csv
+!data/candidates_V2.csv
+!data/sampleSubmission.csv
+data/raw/
+data/processed/
+data/candidates/
+*.zip
+*.mhd
+*.raw
+*.nii
+*.nii.gz
+*.npy
+*.npz
+
+# ---- Experiment artifacts ----
+checkpoints/
+logs/
+runs/
+wandb/
+*.pt
+*.pth
+*.ckpt
+results/predictions/
+
+# ---- Project report build files / reference papers ----
+Papers/
+~$*
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
