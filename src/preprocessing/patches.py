@@ -5,8 +5,8 @@ from .io import Volume
 from .slice_context import slice_indices
 
 
-def extract_25d_patch(vol: Volume, center_xyz_mm, size: int = 64, n_slices: int = 3,
-                      boundary: str = "edge", pad_value: float = 0.0):
+def extract_25d_patch(vol: Volume, center_xyz_mm, size: int = 64, n_slices: int = 5,
+                      boundary: str = "edge", pad_value: float = 0.0, stride: int = 1):
     """Axial 2.5D patch (n_slices, size, size) centred on a world coordinate.
 
     The centre is rounded to the nearest voxel of `vol` (the resampled grid), so the
@@ -16,7 +16,7 @@ def extract_25d_patch(vol: Volume, center_xyz_mm, size: int = 64, n_slices: int 
     c = vol.world_to_voxel(center_xyz_mm)
     cx, cy, cz = (int(round(v)) for v in c)
     depth, H, W = vol.array.shape
-    zs = slice_indices(min(max(cz, 0), depth - 1), n_slices, depth, boundary) if 0 <= cz < depth else None
+    zs = slice_indices(cz, n_slices, depth, boundary, stride) if 0 <= cz < depth else None
     if zs is None:
         return np.full((n_slices, size, size), pad_value, np.float32), c
     half = size // 2

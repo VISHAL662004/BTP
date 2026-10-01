@@ -7,7 +7,7 @@ from src.utils.seed import set_seed
 
 def test_config_loads():
     cfg = load_config("configs/base.yaml")
-    assert cfg["data"]["input_slices"] == 3
+    assert cfg["data"]["input_slices"] == 5
 
 
 def test_seed_reproducible():

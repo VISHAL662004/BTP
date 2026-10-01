@@ -15,7 +15,8 @@ device:
   fallback: cpu
 
 data:
-  input_slices: 3     # 2.5D: z-1, z, z+1 (configurable)
+  input_slices: 5     # 2.5D: z-2 ... z+2 (configurable)
+  slice_stride: 1
   patch_size: 64
 
 training:

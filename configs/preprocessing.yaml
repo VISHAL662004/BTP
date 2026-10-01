@@ -25,7 +25,8 @@ lung_region:
   margin_mm: 10.0        # dilation / crop margin around lung bounding box
 
 slice_context:
-  input_slices: 3        # 2.5D: z-1, z, z+1 (odd, configurable)
+  input_slices: 5        # 2.5D: z-2 ... z+2 (odd, configurable); at 1 mm spacing spans 4 mm
+  slice_stride: 1        # voxel step between channels (1 = adjacent slices; 2-3 = wider context)
   boundary: edge         # replicate edge slice at scan boundaries
 
 patches:

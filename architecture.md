@@ -42,7 +42,7 @@ The system is organized into the following major stages:
                                     ▼
                          ┌─────────────────────┐
                          │   2.5D Formation    │
-                         │ z-1 / z / z+1 ...  │
+                         │ z-2 ... z+2 ...    │
                          └──────────┬──────────┘
                                     │
                                     ▼
@@ -846,7 +846,8 @@ experiment:
   name: baseline_2_5d
 
 data:
-  input_slices: 3
+  input_slices: 5
+  slice_stride: 1
   patch_size: 64
 
 model:

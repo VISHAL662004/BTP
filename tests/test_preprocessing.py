@@ -98,3 +98,14 @@ def test_canonical_origin_matches_io():
     assert canonical_origin(row) == v.origin
     row.flip_x = row.flip_y = 1.
     assert canonical_origin(row) == (10., 20., 30.)
+
+
+def test_five_slices_and_stride():
+    assert slice_indices(5, 5, 20) == [3, 4, 5, 6, 7]
+    assert slice_indices(5, 5, 20, stride=2) == [1, 3, 5, 7, 9]
+    assert slice_indices(1, 5, 20) == [0, 0, 1, 2, 3]
+    with pytest.raises(ValueError):
+        slice_indices(5, 3, 20, stride=0)
+    vol = Volume(np.arange(20, dtype=np.float32)[:, None, None] * np.ones((20, 8, 8), np.float32), (1., 1., 1.), (0., 0., 0.))
+    p, _ = extract_25d_patch(vol, (4., 4., 10.), size=4, n_slices=5, stride=3)
+    assert p[:, 2, 2].tolist() == [4., 7., 10., 13., 16.]
