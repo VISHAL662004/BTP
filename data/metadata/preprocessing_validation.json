@@ -1,0 +1,10 @@
+{
+  "scans": 41,
+  "annotations": 79,
+  "flipped_scans": 11,
+  "frac_aligned_dense(>-500HU)": 0.911,
+  "frac_random_lung_dense": 0.038,
+  "frac_annotation_in_lung(5mm dilation)": 1.0,
+  "flipped_frac_aligned_dense": 1.0,
+  "flipped_frac_mirrored_dense": 0.583
+}

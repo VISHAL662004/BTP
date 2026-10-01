@@ -40,6 +40,7 @@ pytest
 
 ## Status
 
-Phases 0–2 complete. Next: Phase 3 — CT preprocessing.
+Phases 0–3 complete. Next: Phase 4 — 2D baseline.
 
-Dataset validation: `python scripts/validate_dataset.py` (outputs in `data/metadata/`, splits in `data/splits/`). See [memory.md](memory.md).
+Dataset validation: `python scripts/validate_dataset.py` (outputs in `data/metadata/`, splits in `data/splits/`).
+Preprocessing: `python scripts/build_candidate_index.py`, `python scripts/validate_preprocessing.py` (see `configs/preprocessing.yaml`). See [memory.md](memory.md).

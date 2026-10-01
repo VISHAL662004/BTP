@@ -1,0 +1,26 @@
+{
+  "rows": 754975,
+  "per_split": [
+    {
+      "split": "test",
+      "candidates": 75924,
+      "positives": 144,
+      "in_lung": 0.9988
+    },
+    {
+      "split": "train",
+      "candidates": 604563,
+      "positives": 1218,
+      "in_lung": 0.9961
+    },
+    {
+      "split": "val",
+      "candidates": 74488,
+      "positives": 195,
+      "in_lung": 0.9984
+    }
+  ],
+  "positives_in_lung_frac": 0.9974,
+  "negatives_in_lung_frac": 0.9966,
+  "positives_outside_lung": 4
+}

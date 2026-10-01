@@ -19,13 +19,13 @@ The AI should update this file whenever a significant project decision, implemen
 
 # Current State
 
-**Phase:** Phase 3 — CT Preprocessing (not started)
+**Phase:** Phase 4 — 2D Baseline (not started)
 
-**Completed:** Phases 0, 1, 2 (dataset validated, Gate 1 passed)
+**Completed:** Phases 0, 1, 2, 3
 
 **In Progress:** None
 
-**Next Task:** Begin Phase 3 — CT preprocessing (HU, windowing, normalization, resampling, lung ROI, slice extraction, patch/candidate generation); must apply per-scan direction matrix for world→voxel
+**Next Task:** Begin Phase 4 — 2D baseline (dataset, simple 2D model, training, detection evaluation). Validate FROC/CPM against the official script in `data/evaluationScript.zip` (extract to scratch/outside git; note it expects candidates CSV format seriesuid,coordX,coordY,coordZ,probability).
 
 ---
 
@@ -80,6 +80,18 @@ No NFD or other auxiliary regularization term is used.
 * Split (scan level, by subset, no randomness): train subsets 0–7 (712 scans, 963 nodules), val subset 8 (88, 118), test subset 9 (88, 105). Files in `data/splits/`.
 * Regenerate everything: `python scripts/validate_dataset.py [--crc]`; exploration in `notebooks/01_data_exploration.ipynb`.
 * Official evaluation script is inside `data/evaluationScript.zip` (needed to validate FROC/CPM in Phase 4).
+
+---
+
+# Preprocessing (Phase 3 results)
+
+* Pipeline (`src/preprocessing/`, config `configs/preprocessing.yaml`): load from zip → canonicalize orientation (flip x/y back; array (z,y,x), identity direction) → HU clip [-1024, 3071] → resample to 1 mm isotropic (separable linear; masks nearest; origin preserved) → window [-1000, 400] HU → [0,1] (fixed constants, no dataset stats) → lung mask labels 3+4.
+* Raw LUNA16 data is already in HU. Lung mask zraw is zlib int16 with labels 3 left, 4 right, 5 trachea.
+* Full volumes are NOT cached (would be >100 GB); preprocess per scan on demand (~2 s/scan, ~1.7 GB peak RAM) or cache patches only.
+* 2.5D patches: `extract_25d_patch` (64×64, 3 slices z-1,z,z+1, edge boundary, pad 0 = -1000 HU). Patch centre = candidate world coord.
+* Candidate index: `data/candidates/candidate_index.csv` (candidates_V2 + split + canonical voxel coords + in_lung flag; git-ignored, rebuild with `scripts/build_candidate_index.py`). Train 604,563 cands/1,218 pos; val 74,488/195; test 75,924/144. 99.7% of candidates (and all but 4 of 1,557 positives) lie in the 5 mm-dilated lung mask.
+* Validation (`scripts/validate_preprocessing.py`, 41 scans/79 nodules): 91% of annotation sites dense (>-500 HU mean in 1.5 mm sphere) vs 3.8% for random lung voxels; flipped scans 100% aligned vs 58% at mirrored position; 100% inside dilated lung. Remaining ~9% plausibly ground-glass nodules. Visual check in `notebooks/02_preprocessing_validation.ipynb`.
+* Bug fixed during phase: canonical origin shift must apply only to axes with negative direction sign (regression test added).
 
 ---
 

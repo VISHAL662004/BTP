@@ -1,0 +1,33 @@
+# Preprocessing configuration (Phase 3). Values are experimental parameters, not final.
+hu:
+  # LUNA16 .raw files already store Hounsfield units; slope/intercept kept for generality.
+  slope: 1.0
+  intercept: 0.0
+  clip_min: -1024.0     # also removes out-of-scanner padding values (e.g. -2000)
+  clip_max: 3071.0
+
+window:                  # intensity window applied before normalization
+  min: -1000.0
+  max: 400.0
+
+normalization:
+  method: window_minmax  # (hu - min) / (max - min) -> [0, 1]; fixed constants, no data-derived stats
+
+resampling:
+  enabled: true
+  target_spacing_mm: [1.0, 1.0, 1.0]   # (x, y, z)
+  order: 1                             # linear interpolation for CT
+  mask_order: 0                        # nearest for lung masks
+
+lung_region:
+  enabled: true
+  labels: [3, 4]         # left lung, right lung (5 = trachea excluded)
+  margin_mm: 10.0        # dilation / crop margin around lung bounding box
+
+slice_context:
+  input_slices: 3        # 2.5D: z-1, z, z+1 (odd, configurable)
+  boundary: edge         # replicate edge slice at scan boundaries
+
+patches:
+  size: 64               # in-plane H = W (voxels at target spacing)
+  pad_value: 0.0         # normalized value used outside the volume (= -1000 HU)
