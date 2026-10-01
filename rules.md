@@ -316,15 +316,17 @@ The project will use 2.5D representations as the primary research direction.
 
 The number of neighboring slices must be configurable.
 
-For example:
+The default representation is 5 slices at 1 mm spacing:
 
 ```text
+z-2
 z-1
  z
 z+1
+z+2
 ```
 
-may form one representation.
+Configurable via `input_slices` and `slice_stride`.
 
 However, this must remain an experimental parameter rather than an immutable assumption.
 

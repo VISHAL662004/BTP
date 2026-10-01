@@ -297,7 +297,7 @@ This preprocessing step must preserve annotation coordinates.
 
 ```text
 RESEARCH DECISION
-The current experiment uses three adjacent CT slices.
+The current experiment uses five adjacent CT slices (z-2 … z+2, 1 mm apart).
 ```
 
 ### Warning

@@ -192,16 +192,12 @@ Instead of processing a single CT slice independently, the system will combine i
 Conceptually:
 
 ```text
-Slice z-1
-   +
-Slice z
-   +
-Slice z+1
+Slice z-2 + Slice z-1 + Slice z + Slice z+1 + Slice z+2
    ↓
-2.5D Input
+2.5D Input (5 channels, slices 1 mm apart after resampling)
 ```
 
-The exact number of neighboring slices should remain configurable.
+The default is 5 slices (z-2 … z+2) at 1 mm spacing, spanning 4 mm. The number of slices and the slice stride remain configurable; the effect of 1 vs 3 vs 5 slices (and wider stride) is evaluated in the 2D vs 2.5D comparison rather than assumed.
 
 The project should allow experimentation with different slice contexts where computationally practical.
 

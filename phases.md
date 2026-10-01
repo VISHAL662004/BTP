@@ -360,15 +360,17 @@ Introduce the project's primary CT representation.
 
 Implement configurable adjacent-slice input.
 
-Example:
+Default (decision recorded in `memory.md`): 5 slices at 1 mm spacing.
 
 ```text
+z-2
 z-1
  z
 z+1
+z+2
 ```
 
-Potential configurations should remain configurable.
+`input_slices` and `slice_stride` remain configurable. In Phase 6, also compare 1 vs 3 vs 5 slices (and a wider stride) with all else fixed.
 
 ## Tasks
 
@@ -377,7 +379,7 @@ Potential configurations should remain configurable.
 * Verify boundary handling.
 * Verify annotation alignment.
 * Visualize 2.5D samples.
-* Compare 2D and 2.5D inputs.
+* Compare 2D and 2.5D inputs (including 1 vs 3 vs 5 slices).
 
 ## Deliverables
 
