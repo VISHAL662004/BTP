@@ -3,7 +3,7 @@
 **File:** `memory.md`
 **Project:** 2.5D CNN–Transformer Framework for Lung Nodule Detection
 **Version:** 1.1
-**Status:** Initial (documentation synced with `Project_Report.pdf`)
+**Status:** Phase 0 complete (documentation synced with `Project_Report.pdf`)
 
 ---
 
@@ -19,9 +19,9 @@ The AI should update this file whenever a significant project decision, implemen
 
 # Current State
 
-**Phase:** Not started
+**Phase:** Phase 1 — Environment & Repository Setup (not started)
 
-**Completed:** None
+**Completed:** Phase 0 — Project Initialization
 
 **In Progress:** None
 
