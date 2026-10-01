@@ -29,6 +29,15 @@ The value of each component is determined through single-variable ablation (E0 2
 
 Python 3.11, PyTorch (Apple MPS where stable, CPU fallback), NumPy, SciPy, pandas, scikit-learn, SimpleITK, nibabel, PyYAML, matplotlib, pytest. Developed on a MacBook Pro (M3, 8 GB RAM).
 
+## Setup
+
+```bash
+conda env create -f environment.yml
+conda activate btp-lung
+python scripts/check_env.py   # library, CPU and MPS checks
+pytest
+```
+
 ## Status
 
-Phase 0 (project initialization) complete. Next: Phase 1 — environment and repository setup. See [memory.md](memory.md).
+Phases 0–1 complete. Next: Phase 2 — dataset understanding and validation. See [memory.md](memory.md).

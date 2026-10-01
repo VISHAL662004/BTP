@@ -1,0 +1,14 @@
+# Core stack (Python 3.11). Prefer environment.yml; this mirrors it for pip users.
+torch
+torchvision
+numpy
+scipy
+pandas
+scikit-learn
+SimpleITK
+nibabel
+PyYAML
+matplotlib
+jupyter
+ipykernel
+pytest

@@ -1,0 +1,22 @@
+name: btp-lung
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  # torch from conda-forge (not pip): the pip wheel bundles its own libomp, which
+  # clashes with conda's numpy/scipy OpenMP runtime on macOS (OMP Error #15).
+  - pytorch
+  - torchvision
+  - numpy
+  - scipy
+  - pandas
+  - scikit-learn
+  - pyyaml
+  - matplotlib
+  - jupyter
+  - ipykernel
+  - pytest
+  - pip:
+      - SimpleITK
+      - nibabel

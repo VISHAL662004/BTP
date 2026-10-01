@@ -1,0 +1,34 @@
+# Base configuration shared by all experiments. Values are placeholders
+# until fixed by experiments (see architecture.md section 26).
+experiment:
+  name: base
+  seed: 42
+
+paths:
+  data_root: data
+  results_root: results
+  checkpoints_root: checkpoints
+  logs_root: logs
+
+device:
+  preferred: mps      # mps | cpu ; falls back to cpu if unavailable
+  fallback: cpu
+
+data:
+  input_slices: 3     # 2.5D: z-1, z, z+1 (configurable)
+  patch_size: 64
+
+training:
+  batch_size: 4
+  epochs: 50
+  learning_rate: 0.001
+
+loss:
+  lambda_cls: 1.0
+  lambda_loc: 1.0
+
+pruning:
+  enabled: false
+
+model:
+  attention: false

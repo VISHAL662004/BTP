@@ -19,13 +19,13 @@ The AI should update this file whenever a significant project decision, implemen
 
 # Current State
 
-**Phase:** Phase 1 — Environment & Repository Setup (not started)
+**Phase:** Phase 2 — Dataset Understanding & Validation (not started)
 
-**Completed:** Phase 0 — Project Initialization
+**Completed:** Phase 0 — Project Initialization; Phase 1 — Environment & Repository Setup
 
 **In Progress:** None
 
-**Next Task:** Begin Phase 1 — Environment & Repository Setup
+**Next Task:** Begin Phase 2 — validate local LUNA16 data (`data/` holds subset0–3 zips, annotations.csv, candidates*.csv, seg-lungs zip)
 
 ---
 
@@ -59,6 +59,16 @@ formulation is finalized once the detection head is selected.
 No NFD or other auxiliary regularization term is used.
 
 **Next task:** Begin Phase 1 and proceed through the baselines.
+
+---
+
+# Environment
+
+* Conda env `btp-lung` (`/opt/homebrew/Caskroom/miniconda/base/envs/btp-lung`), Jupyter kernel "Python 3.11 (btp-lung)".
+* Versions: Python 3.11.16, PyTorch 2.10.0 (conda-forge), NumPy 2.4.6, SciPy 1.17.1, pandas 3.0.6, scikit-learn 1.9.1, SimpleITK 2.5.6, nibabel 5.4.2, matplotlib 3.11.2, PyYAML 6.0.3, pytest 9.1.1.
+* CPU and Apple MPS both verified (`python scripts/check_env.py`, `pytest`).
+* Gotcha: torch must come from conda-forge, not pip — the pip wheel's bundled libomp clashes with conda numpy (OMP Error #15).
+* Only subset0–3 of LUNA16 are present locally (not all 10 subsets) — to be checked in Phase 2.
 
 ---
 
