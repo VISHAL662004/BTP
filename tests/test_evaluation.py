@@ -57,3 +57,23 @@ def test_fp_per_scan_normalisation():
     r = evaluate(cand, ["a", "b"], ann)       # 2 scans, 4 FPs scored above the TP
     assert abs(r.fps.max() - 4 / 2) < 1e-9
     assert len(FP_RATES) == 7
+
+
+def test_assemble_matches_evaluate_and_bootstrap_paired():
+    from src.evaluation.froc import assemble, bootstrap_cpm, scan_vectors, sensitivity_by_size
+    rng = np.random.default_rng(0)
+    ann = _ann([(f"s{i}", 0, 0, 0, 8.0 + i) for i in range(6)])
+    rows = []
+    for i in range(6):
+        rows.append((f"s{i}", 0, 0, 0, 0.9 - 0.05 * i))
+        rows += [(f"s{i}", 100 + j, 0, 0, rng.random() * 0.6) for j in range(10)]
+    cand = _cand(rows)
+    uids = [f"s{i}" for i in range(6)]
+    vecs = scan_vectors(cand, uids, ann)
+    a, b = assemble(vecs, uids), evaluate(cand, uids, ann)
+    assert a.cpm == b.cpm and a.true_positives == 6
+    boot = bootstrap_cpm([vecs, vecs], uids, n_boot=20, seed=1)
+    assert boot.shape == (20, 2) and np.allclose(boot[:, 0], boot[:, 1])          # same model -> identical, paired resamples
+    assert 0 <= boot.min() and boot.max() <= 1
+    sz = sensitivity_by_size(vecs, uids, fp_rate=1.0)
+    assert sum(v["nodules"] for v in sz.values()) == 6

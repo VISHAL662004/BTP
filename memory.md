@@ -19,13 +19,13 @@ The AI should update this file whenever a significant project decision, implemen
 
 # Current State
 
-**Phase:** Phase 6 — 2.5D CNN Baseline (not started)
+**Phase:** Phase 7 — CNN–Transformer Architecture (not started)
 
-**Completed:** Phases 0–5
+**Completed:** Phases 0–6 (Gate 2 passed: 2.5D clearly better than 2D)
 
 **In Progress:** None
 
-**Next Task:** Phase 6 — train the 2.5D CNN (`channels: null` = all 5 slices, `in_channels: 5`) with settings identical to EXP-001 (new experiment folder, e.g. EXP-002-baseline-25d), plus 3-slice (`centered_channels(5,3)`) and 1-slice references. Same seed/splits. Report CPM with bootstrap CI (single-seed differences of a few CPM points are noise). Measure params/latency/FLOPs. Wider-stride variants need a new patch cache (`slice_stride`; not built).
+**Next Task:** Phase 7 — add a Transformer module on top of the 5-slice CNN features (new experiment, identical training/eval protocol, `channels` all 5). Compare against the 2.5D CNN reference EXP-002-slices5-s* using 3 seeds + paired bootstrap (`scripts/compare_experiments.py` pattern; extend `discover()`). Note the CNN backbone currently pools to a 4×4 map (64→4 after 4 pools) — define the token interface (e.g. 16 tokens × 128 d).
 
 ---
 
@@ -117,6 +117,18 @@ No NFD or other auxiliary regularization term is used.
 * `centered_channels(total, n)` in `src/data/patch_store.py` selects the n centre channels (e.g. 3 of 5 → [1,2,3]).
 * Progress bars: `src/utils/progress.py` (tqdm live bar in a terminal; plain-text `[████░░░░] 5/20 25% | elapsed ETA` lines when redirected). Used by training (epoch + batch bars), cache/index builders, evaluation, validation scripts. Training log with epoch bars: `experiments/<group>/<EXP>/training.log` (git-ignored); `tail -f` it during a run. tqdm added to the environment (conda-forge).
 * Reproducibility check: the first epoch of a re-run with seed 42 gave exactly the same loss (0.6549) as EXP-001.
+
+---
+
+# 2.5D CNN baseline (Phase 6 results)
+
+* Sweep: `scripts/run_sweep.py` (resumable; log `experiments/baseline/phase6_sweep.log`, 2h12m total) trained `EXP-002-slices{n}-s{seed}`; identical to EXP-001 except input slices (1/3/5 centre channels of the 5-slice cache) and seed. Runs: 5-slice seeds 42/43/44, 3-slice seed 42, 1-slice seeds 43/44 (+EXP-001 = 1-slice seed 42). `scripts/compare_experiments.py` → `results/tables/phase6_*.{csv,json}`, `results/figures/phase6_*.png`; notebook `03_baseline_analysis.ipynb` (Phase 6 section).
+* Validation CPM: 1-slice 0.620 ± 0.012 (3 seeds), 3-slice 0.707 (1 seed), **5-slice 0.799 ± 0.019 (3 seeds)**. Test CPM: 0.668 ± 0.024 / 0.800 / 0.869 ± 0.013. Paired bootstrap ΔCPM val: 5−1 = +0.18 (95% CI 0.12–0.24), 3−1 = +0.09 (0.03–0.15), 5−3 = +0.09 (0.04–0.13); test agrees. Best epochs 13–19 of 20.
+* By nodule size @1 FP/scan (val): <6 mm 0.58→0.71→0.84; 6–10 mm 0.52→0.62→0.75; ≥10 mm 0.85→0.90→0.88 (1/3/5 slices). Supports the Phase 5 hypothesis.
+* Efficiency: 302,228 / 302,516 / 302,804 params; 105.0 / 107.4 / 109.7 MFLOPs per sample (MACs = half). Batch-1 CPU latency measurements were noisy (machine in use) — redo under quiet conditions before reporting.
+* Decision (validation-based): **5-slice input is the default from Phase 7 on.** Untested: wider context (7 slices / stride 2) needs a new patch cache (`slice_stride`).
+* Epoch time: ~40 s (1-slice) vs ~45–90 s (5-slice) on MPS (timing varies with other load).
+* EXP-001 was re-evaluated once to add the FLOPs field (same checkpoint; CPM unchanged: val 0.632, test 0.675).
 
 ---
 

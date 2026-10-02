@@ -40,9 +40,9 @@ pytest
 
 ## Status
 
-Phases 0–5 complete. Next: Phase 6 — 2.5D CNN baseline.
+Phases 0–6 complete. Next: Phase 7 — CNN–Transformer architecture.
 
-2D baseline (EXP-001): val CPM 0.632 / test CPM 0.675 (official LUNA16 FROC/CPM, single seed). See `notebooks/03_baseline_analysis.ipynb`.
+Baselines (official LUNA16 FROC/CPM, validation CPM, 3 seeds): 2D CNN 0.620 ± 0.012; 2.5D CNN with 5 slices 0.799 ± 0.019 (test 0.668 → 0.869). Sweep: `python scripts/run_sweep.py`, summary: `python scripts/compare_experiments.py`. See `notebooks/03_baseline_analysis.ipynb`.
 
 Dataset validation: `python scripts/validate_dataset.py` (outputs in `data/metadata/`, splits in `data/splits/`).
 2.5D check: `python scripts/validate_25d.py` (notebook `04_25d_pipeline_validation.ipynb`). Training progress is shown as live bars and logged to `experiments/<group>/<EXP>/training.log`.

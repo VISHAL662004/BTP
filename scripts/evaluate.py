@@ -19,6 +19,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data.patch_store import PatchStore
+from src.efficiency.flops import count_flops
 from src.efficiency.latency import measure_latency
 from src.efficiency.parameters import count_parameters
 from src.evaluation.evaluator import predict_proba, score
@@ -69,7 +70,7 @@ def main():
     plt.savefig(f"results/figures/{name}_froc.png", dpi=150)
 
     c = len(cfg["data"]["channels"] or range(5))
-    metrics["efficiency"] = {**count_parameters(model),
+    metrics["efficiency"] = {**count_parameters(model), **count_flops(model, (1, c, 64, 64)),
                              "latency_cpu_batch1": measure_latency(model, (1, c, 64, 64), "cpu"),
                              "latency_cpu_batch256": measure_latency(model, (256, c, 64, 64), "cpu", runs=20)}
     if device.type == "mps":

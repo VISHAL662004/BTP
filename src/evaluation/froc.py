@@ -80,46 +80,116 @@ def _cap_marks(g: pd.DataFrame, k: int) -> pd.DataFrame:
     return g if k is None or len(g) <= k else g.sort_values("probability", ascending=False, kind="stable").iloc[:k]
 
 
-def evaluate(candidates: pd.DataFrame, seriesuids, annotations: pd.DataFrame,
-             excluded: pd.DataFrame = None, max_marks_per_scan: int = 100, legacy: bool = False) -> FrocResult:
-    """candidates: seriesuid, coordX, coordY, coordZ, probability. annotations: LUNA16
-    annotations.csv rows (diameter_mm). excluded: annotations_excluded.csv (optional)."""
-    seriesuids = list(seriesuids)
+@dataclass
+class ScanVec:
+    """FROC vectors of one scan (concatenated across scans to get the dataset FROC)."""
+    gt: np.ndarray
+    prob: np.ndarray
+    excl: np.ndarray
+    diam: np.ndarray        # nodule diameter (mm) for GT entries, NaN for false positives
+    tp: int = 0
+    fn: int = 0
+    fp: int = 0
+    n_cands: int = 0
+    n_nod: int = 0
+    ign_exc: int = 0
+    ign_dbl: int = 0
+
+
+def scan_vectors(candidates: pd.DataFrame, seriesuids, annotations: pd.DataFrame, excluded: pd.DataFrame = None,
+                 max_marks_per_scan: int = 100, legacy: bool = False) -> dict:
+    """Per-scan FROC vectors (uid -> ScanVec). Matching/ignoring rules as described in the module doc."""
     if legacy:
         max_marks_per_scan = None
     cand_g = {k: _cap_marks(g, max_marks_per_scan) for k, g in candidates.groupby("seriesuid")}
     neg_r2 = 0.25 if legacy else 25.0   # radius^2 for annotations with diameter < 0
     ann_g = {k: g for k, g in annotations.groupby("seriesuid")}
     exc_g = {k: g for k, g in excluded.groupby("seriesuid")} if excluded is not None else {}
-    gt, prob, excl = [], [], []
-    tp = fn = fp = n_cands = n_nod = ign_exc = ign_dbl = 0
-    for uid in seriesuids:
+    out = {}
+    for uid in dict.fromkeys(seriesuids):
         g = cand_g.get(uid)
         if g is None:
             xyz, p = np.zeros((0, 3)), np.zeros(0)
         else:
             xyz, p = g[["coordX", "coordY", "coordZ"]].to_numpy(float), g["probability"].to_numpy(float)
-        n_cands += len(p)
+        v = ScanVec([], [], [], [], n_cands=len(p))
+        gt, prob, excl, diam = [], [], [], []
         remaining = np.ones(len(p), bool)
         if uid in ann_g:
             for a in ann_g[uid][["coordX", "coordY", "coordZ", "diameter_mm"]].itertuples(index=False):
-                n_nod += 1
+                v.n_nod += 1
                 r2 = (a.diameter_mm / 2.0) ** 2 if a.diameter_mm >= 0 else neg_r2
                 hit = ((xyz - np.array(a[:3])) ** 2).sum(1) < r2
+                diam.append(a.diameter_mm); gt.append(1.0); excl.append(not hit.any())
                 if hit.any():
-                    ign_dbl += int(hit.sum()) - 1
+                    v.ign_dbl += int(hit.sum()) - 1
                     remaining &= ~hit
-                    gt.append(1.0); prob.append(p[hit].max()); excl.append(False); tp += 1
+                    prob.append(p[hit].max()); v.tp += 1
                 else:
-                    gt.append(1.0); prob.append(MIN_PROB); excl.append(True); fn += 1
+                    prob.append(MIN_PROB); v.fn += 1
         if uid in exc_g:
             for a in exc_g[uid][["coordX", "coordY", "coordZ", "diameter_mm"]].itertuples(index=False):
                 r2 = (a.diameter_mm / 2.0) ** 2 if a.diameter_mm >= 0 else neg_r2
                 hit = (((xyz - np.array(a[:3])) ** 2).sum(1) < r2) & remaining
-                ign_exc += int(hit.sum())
+                v.ign_exc += int(hit.sum())
                 remaining &= ~hit
         fp_p = p[remaining]
-        fp += len(fp_p)
-        gt.extend([0.0] * len(fp_p)); prob.extend(fp_p.tolist()); excl.extend([False] * len(fp_p))
-    fps, sens, thr = compute_froc_curve(gt, prob, len(seriesuids), excl)
-    return FrocResult(fps, sens, thr, n_nod, tp, fp, fn, n_cands, ign_exc, ign_dbl, len(seriesuids))
+        v.fp = len(fp_p)
+        gt += [0.0] * v.fp; prob += fp_p.tolist(); excl += [False] * v.fp; diam += [np.nan] * v.fp
+        v.gt, v.prob, v.excl, v.diam = (np.array(x, float) for x in (gt, prob, excl, diam))
+        v.excl = v.excl.astype(bool)
+        out[uid] = v
+    return out
+
+
+def assemble(vecs: dict, uids) -> FrocResult:
+    """Dataset-level FROC from per-scan vectors; `uids` may contain duplicates (bootstrap)."""
+    uids = list(uids)
+    cat = lambda f: np.concatenate([getattr(vecs[u], f) for u in uids]) if uids else np.zeros(0)
+    fps, sens, thr = compute_froc_curve(cat("gt"), cat("prob"), len(uids), cat("excl"))
+    tot = lambda f: sum(getattr(vecs[u], f) for u in uids)
+    return FrocResult(fps, sens, thr, tot("n_nod"), tot("tp"), tot("fp"), tot("fn"), tot("n_cands"),
+                      tot("ign_exc"), tot("ign_dbl"), len(uids))
+
+
+def evaluate(candidates: pd.DataFrame, seriesuids, annotations: pd.DataFrame,
+             excluded: pd.DataFrame = None, max_marks_per_scan: int = 100, legacy: bool = False) -> FrocResult:
+    seriesuids = list(seriesuids)
+    return assemble(scan_vectors(candidates, seriesuids, annotations, excluded, max_marks_per_scan, legacy), seriesuids)
+
+
+def _cpm(fps, sens) -> float:
+    return float(np.mean([np.interp(r, fps, sens) for r in FP_RATES]))
+
+
+def bootstrap_cpm(vecs_list, uids, n_boot: int = 1000, seed: int = 0) -> np.ndarray:
+    """Scan-level bootstrap (as in the official script): resample scans with replacement and
+    recompute CPM for every model on the SAME resamples -> paired differences. Returns (n_boot, n_models)."""
+    uids = np.array(list(uids))
+    rng = np.random.default_rng(seed)
+    out = np.empty((n_boot, len(vecs_list)))
+    for b in range(n_boot):
+        samp = uids[rng.integers(0, len(uids), len(uids))]
+        for m, vecs in enumerate(vecs_list):
+            r = assemble(vecs, samp)
+            out[b, m] = _cpm(r.fps, r.sens)
+    return out
+
+
+SIZE_BINS = (("<6 mm", 0, 6), ("6-10 mm", 6, 10), (">=10 mm", 10, 1e9))
+
+
+def sensitivity_by_size(vecs: dict, uids, fp_rate: float = 1.0, bins=SIZE_BINS) -> dict:
+    """Sensitivity per nodule-diameter bin at the operating threshold giving `fp_rate` FP/scan overall."""
+    uids = list(uids)
+    res = assemble(vecs, uids)
+    i = max(int(np.searchsorted(res.fps, fp_rate, side="right")) - 1, 0)
+    thr = res.thresholds[i]
+    gt = np.concatenate([vecs[u].gt for u in uids]); prob = np.concatenate([vecs[u].prob for u in uids])
+    diam = np.concatenate([vecs[u].diam for u in uids]); ex = np.concatenate([vecs[u].excl for u in uids])
+    out = {}
+    for name, lo, hi in bins:
+        m = (gt == 1) & (diam >= lo) & (diam < hi)
+        det = m & (prob >= thr) & ~ex
+        out[name] = {"nodules": int(m.sum()), "detected": int(det.sum()), "sensitivity": float(det.sum() / max(m.sum(), 1))}
+    return out

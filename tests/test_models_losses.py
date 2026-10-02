@@ -82,3 +82,13 @@ def test_centered_channels():
     assert centered_channels(5, 1) == [2] and centered_channels(5, 3) == [1, 2, 3] and centered_channels(5, 5) == [0, 1, 2, 3, 4]
     with pytest.raises(ValueError):
         centered_channels(5, 2)
+
+
+def test_flops_scale_with_input_channels():
+    from src.efficiency.flops import count_flops
+    from src.utils.config import load_experiment_config
+    cfg = load_experiment_config("configs/experiments/baseline.yaml")
+    f1 = count_flops(build_detector(cfg), (1, 1, 64, 64))["flops_per_sample"]
+    cfg["model"]["in_channels"] = 5
+    f5 = count_flops(build_detector(cfg), (1, 5, 64, 64))["flops_per_sample"]
+    assert 0 < f1 < f5 < 1.2 * f1       # only the first conv grows
