@@ -1,0 +1,360 @@
+{
+  "summary": [
+    {
+      "model": "CNN (5 slices)",
+      "runs": 3,
+      "val_cpm_mean": 0.7986279257465698,
+      "val_cpm_std": 0.01923123899506683,
+      "test_cpm_mean": 0.8693877551020409,
+      "test_cpm_std": 0.01312061328026256,
+      "val_sens1": 0.827683615819209,
+      "test_sens1": 0.9111111111111111,
+      "params": 302804,
+      "MFLOPs": 109.72416,
+      "cpu_ms_b256": 173.94627380371094,
+      "mps_ms_b256": 25.11117935180664
+    },
+    {
+      "model": "CNN + Transformer",
+      "runs": 3,
+      "val_cpm_mean": 0.7736077481840193,
+      "val_cpm_std": 0.005277117365061333,
+      "test_cpm_mean": 0.8417233560090703,
+      "test_cpm_std": 0.027017453076837127,
+      "val_sens1": 0.8163841807909605,
+      "test_sens1": 0.8984126984126984,
+      "params": 570068,
+      "MFLOPs": 118.374912,
+      "cpu_ms_b256": 196.79155985514322,
+      "mps_ms_b256": 31.537416458129883
+    },
+    {
+      "model": "CNN + extra conv (control)",
+      "runs": 3,
+      "val_cpm_mean": 0.7909604519774011,
+      "val_cpm_std": 0.003494856351026859,
+      "test_cpm_mean": 0.8385487528344671,
+      "test_cpm_std": 0.01454785934906621,
+      "val_sens1": 0.8361581920903954,
+      "test_sens1": 0.8825396825396825,
+      "params": 598228,
+      "MFLOPs": 119.161344,
+      "cpu_ms_b256": 190.45751444498697,
+      "mps_ms_b256": 27.045554478963215
+    }
+  ],
+  "runs": [
+    {
+      "model": "CNN (5 slices)",
+      "experiment": "EXP-002-slices5-s42",
+      "seed": 42,
+      "best_epoch": 16,
+      "val_cpm": 0.7881355932203389,
+      "test_cpm": 0.854421768707483,
+      "val_sens@1": 0.8050847457627118,
+      "test_sens@1": 0.9238095238095239,
+      "params": 302804,
+      "MFLOPs": 109.72416,
+      "cpu_ms_b256": 169.8166961669922,
+      "mps_ms_b256": 26.13338851928711
+    },
+    {
+      "model": "CNN (5 slices)",
+      "experiment": "EXP-002-slices5-s43",
+      "seed": 43,
+      "best_epoch": 13,
+      "val_cpm": 0.8208232445520581,
+      "test_cpm": 0.8789115646258504,
+      "val_sens@1": 0.864406779661017,
+      "test_sens@1": 0.9047619047619048,
+      "params": 302804,
+      "MFLOPs": 109.72416,
+      "cpu_ms_b256": 176.9315643310547,
+      "mps_ms_b256": 24.495092391967773
+    },
+    {
+      "model": "CNN (5 slices)",
+      "experiment": "EXP-002-slices5-s44",
+      "seed": 44,
+      "best_epoch": 15,
+      "val_cpm": 0.7869249394673122,
+      "test_cpm": 0.8748299319727891,
+      "val_sens@1": 0.8135593220338984,
+      "test_sens@1": 0.9047619047619048,
+      "params": 302804,
+      "MFLOPs": 109.72416,
+      "cpu_ms_b256": 175.09056091308594,
+      "mps_ms_b256": 24.70505714416504
+    },
+    {
+      "model": "CNN + Transformer",
+      "experiment": "EXP-003-cnn-transformer-s42",
+      "seed": 42,
+      "best_epoch": 11,
+      "val_cpm": 0.7772397094430993,
+      "test_cpm": 0.8476190476190476,
+      "val_sens@1": 0.8050847457627118,
+      "test_sens@1": 0.8952380952380953,
+      "params": 570068,
+      "MFLOPs": 118.374912,
+      "cpu_ms_b256": 195.97647094726562,
+      "mps_ms_b256": 32.5868034362793
+    },
+    {
+      "model": "CNN + Transformer",
+      "experiment": "EXP-003-cnn-transformer-s43",
+      "seed": 43,
+      "best_epoch": 13,
+      "val_cpm": 0.7675544794188862,
+      "test_cpm": 0.8122448979591838,
+      "val_sens@1": 0.8135593220338984,
+      "test_sens@1": 0.8666666666666667,
+      "params": 570068,
+      "MFLOPs": 118.374912,
+      "cpu_ms_b256": 195.71621704101562,
+      "mps_ms_b256": 31.17636489868164
+    },
+    {
+      "model": "CNN + Transformer",
+      "experiment": "EXP-003-cnn-transformer-s44",
+      "seed": 44,
+      "best_epoch": 18,
+      "val_cpm": 0.7760290556900725,
+      "test_cpm": 0.8653061224489796,
+      "val_sens@1": 0.8305084745762712,
+      "test_sens@1": 0.9333333333333333,
+      "params": 570068,
+      "MFLOPs": 118.374912,
+      "cpu_ms_b256": 198.68199157714844,
+      "mps_ms_b256": 30.84908103942871
+    },
+    {
+      "model": "CNN + extra conv (control)",
+      "experiment": "EXP-003c-cnn-extraconv-s42",
+      "seed": 42,
+      "best_epoch": 8,
+      "val_cpm": 0.7869249394673122,
+      "test_cpm": 0.8258503401360544,
+      "val_sens@1": 0.8305084745762712,
+      "test_sens@1": 0.8666666666666667,
+      "params": 598228,
+      "MFLOPs": 119.161344,
+      "cpu_ms_b256": 205.50546264648438,
+      "mps_ms_b256": 26.534908294677734
+    },
+    {
+      "model": "CNN + extra conv (control)",
+      "experiment": "EXP-003c-cnn-extraconv-s43",
+      "seed": 43,
+      "best_epoch": 16,
+      "val_cpm": 0.7929782082324455,
+      "test_cpm": 0.835374149659864,
+      "val_sens@1": 0.847457627118644,
+      "test_sens@1": 0.8952380952380953,
+      "params": 598228,
+      "MFLOPs": 119.161344,
+      "cpu_ms_b256": 183.33944702148438,
+      "mps_ms_b256": 26.159387588500977
+    },
+    {
+      "model": "CNN + extra conv (control)",
+      "experiment": "EXP-003c-cnn-extraconv-s44",
+      "seed": 44,
+      "best_epoch": 12,
+      "val_cpm": 0.7929782082324455,
+      "test_cpm": 0.854421768707483,
+      "val_sens@1": 0.8305084745762712,
+      "test_sens@1": 0.8857142857142857,
+      "params": 598228,
+      "MFLOPs": 119.161344,
+      "cpu_ms_b256": 182.5276336669922,
+      "mps_ms_b256": 28.442367553710938
+    }
+  ],
+  "bootstrap": {
+    "val": {
+      "CNN (5 slices)": {
+        "cpm_mean": 0.7971456456179091,
+        "ci95": [
+          0.7213083641629614,
+          0.8630412164865945
+        ]
+      },
+      "CNN + Transformer": {
+        "cpm_mean": 0.7726530062612771,
+        "ci95": [
+          0.6971950808625338,
+          0.8432851508321776
+        ]
+      },
+      "CNN + extra conv (control)": {
+        "cpm_mean": 0.792116667802429,
+        "ci95": [
+          0.7130238937680335,
+          0.8654895291449914
+        ]
+      },
+      "CNN + Transformer minus CNN (5 slices)": {
+        "delta_cpm": -0.024492639356632068,
+        "ci95": [
+          -0.06116495812463386,
+          0.008888216303470513
+        ],
+        "p(delta<=0)": 0.925
+      },
+      "CNN + Transformer minus CNN + extra conv (control)": {
+        "delta_cpm": -0.01946366154115193,
+        "ci95": [
+          -0.05242096838735489,
+          0.01078114381170268
+        ],
+        "p(delta<=0)": 0.888
+      },
+      "CNN + extra conv (control) minus CNN (5 slices)": {
+        "delta_cpm": -0.005028977815480142,
+        "ci95": [
+          -0.03188710653753026,
+          0.0194726076842866
+        ],
+        "p(delta<=0)": 0.635
+      }
+    },
+    "test": {
+      "CNN (5 slices)": {
+        "cpm_mean": 0.8683271571241878,
+        "ci95": [
+          0.8177777384199402,
+          0.9183267409804625
+        ]
+      },
+      "CNN + Transformer": {
+        "cpm_mean": 0.8433556343847747,
+        "ci95": [
+          0.7946370927318296,
+          0.8974439775910364
+        ]
+      },
+      "CNN + extra conv (control)": {
+        "cpm_mean": 0.840773721281257,
+        "ci95": [
+          0.7883563074352549,
+          0.8911632653061224
+        ]
+      },
+      "CNN + Transformer minus CNN (5 slices)": {
+        "delta_cpm": -0.024971522739413114,
+        "ci95": [
+          -0.058962419919424,
+          0.006568144499178979
+        ],
+        "p(delta<=0)": 0.932
+      },
+      "CNN + Transformer minus CNN + extra conv (control)": {
+        "delta_cpm": 0.0025819131035176267,
+        "ci95": [
+          -0.024865599646508706,
+          0.028379661274398022
+        ],
+        "p(delta<=0)": 0.418
+      },
+      "CNN + extra conv (control) minus CNN (5 slices)": {
+        "delta_cpm": -0.02755343584293074,
+        "ci95": [
+          -0.05510373640981819,
+          -0.002440580933227777
+        ],
+        "p(delta<=0)": 0.987
+      }
+    }
+  },
+  "by_size_at_1fp": {
+    "val": {
+      "CNN (5 slices)": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8444444444444444
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.7450980392156863
+        },
+        ">=10 mm": {
+          "nodules": 39,
+          "sensitivity": 0.8803418803418804
+        }
+      },
+      "CNN + Transformer": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8222222222222223
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.7156862745098039
+        },
+        ">=10 mm": {
+          "nodules": 39,
+          "sensitivity": 0.8974358974358975
+        }
+      },
+      "CNN + extra conv (control)": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.837037037037037
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.7647058823529411
+        },
+        ">=10 mm": {
+          "nodules": 39,
+          "sensitivity": 0.8974358974358975
+        }
+      }
+    },
+    "test": {
+      "CNN (5 slices)": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8814814814814814
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.8823529411764706
+        },
+        ">=10 mm": {
+          "nodules": 26,
+          "sensitivity": 1.0
+        }
+      },
+      "CNN + Transformer": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8444444444444444
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.892156862745098
+        },
+        ">=10 mm": {
+          "nodules": 26,
+          "sensitivity": 1.0
+        }
+      },
+      "CNN + extra conv (control)": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8592592592592593
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.8529411764705882
+        },
+        ">=10 mm": {
+          "nodules": 26,
+          "sensitivity": 0.9615384615384616
+        }
+      }
+    }
+  }
+}

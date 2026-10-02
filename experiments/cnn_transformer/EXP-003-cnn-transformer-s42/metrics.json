@@ -1,0 +1,105 @@
+{
+  "experiment": "EXP-003-cnn-transformer-s42",
+  "checkpoint": "best.pt",
+  "epoch": 11,
+  "seed": 42,
+  "device": "mps",
+  "protocol": "LUNA16 FROC/CPM, max 100 marks/scan",
+  "val": {
+    "cpm": 0.7772397094430993,
+    "max_sensitivity": 0.9745762711864406,
+    "n_scans": 88,
+    "n_nodules": 118,
+    "n_candidates": 8800,
+    "true_positives": 115,
+    "false_negatives": 3,
+    "false_positives": 8107,
+    "ignored_excluded": 501,
+    "ignored_double": 77,
+    "sens@0.125": 0.5254237288135594,
+    "sens@0.25": 0.6440677966101694,
+    "sens@0.5": 0.7627118644067796,
+    "sens@1": 0.8050847457627118,
+    "sens@2": 0.8728813559322034,
+    "sens@4": 0.8983050847457628,
+    "sens@8": 0.9322033898305084,
+    "random_scores_cpm_reference": 0.007263922518159807
+  },
+  "test": {
+    "cpm": 0.8476190476190476,
+    "max_sensitivity": 0.9904761904761905,
+    "n_scans": 88,
+    "n_nodules": 105,
+    "n_candidates": 8800,
+    "true_positives": 104,
+    "false_negatives": 1,
+    "false_positives": 8098,
+    "ignored_excluded": 559,
+    "ignored_double": 39,
+    "sens@0.125": 0.6285714285714286,
+    "sens@0.25": 0.7428571428571429,
+    "sens@0.5": 0.8095238095238095,
+    "sens@1": 0.8952380952380953,
+    "sens@2": 0.9333333333333333,
+    "sens@4": 0.9523809523809523,
+    "sens@8": 0.9714285714285714,
+    "random_scores_cpm_reference": 0.0054421768707483
+  },
+  "efficiency": {
+    "parameters": 570068,
+    "trainable": 570068,
+    "nonzero": 570068,
+    "sparsity": 0.0,
+    "model_size_mb": 2.280272,
+    "flops_per_sample": 118374912.0,
+    "macs_per_sample": 59187456.0,
+    "input_shape": [
+      1,
+      5,
+      64,
+      64
+    ],
+    "latency_cpu_batch1": {
+      "device": "cpu",
+      "input_shape": [
+        1,
+        5,
+        64,
+        64
+      ],
+      "warmup": 10,
+      "runs": 50,
+      "latency_ms_mean": 1.951319932937622,
+      "latency_ms_std": 0.20411157608032227,
+      "throughput_samples_per_s": 512.4736328125
+    },
+    "latency_cpu_batch256": {
+      "device": "cpu",
+      "input_shape": [
+        256,
+        5,
+        64,
+        64
+      ],
+      "warmup": 10,
+      "runs": 20,
+      "latency_ms_mean": 195.97647094726562,
+      "latency_ms_std": 6.048418998718262,
+      "throughput_samples_per_s": 1306.279296875
+    },
+    "latency_mps_batch256": {
+      "device": "mps",
+      "input_shape": [
+        256,
+        5,
+        64,
+        64
+      ],
+      "warmup": 10,
+      "runs": 20,
+      "latency_ms_mean": 32.5868034362793,
+      "latency_ms_std": 0.46015167236328125,
+      "throughput_samples_per_s": 7855.94140625
+    }
+  }
+}

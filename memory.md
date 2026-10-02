@@ -19,13 +19,13 @@ The AI should update this file whenever a significant project decision, implemen
 
 # Current State
 
-**Phase:** Phase 7 — CNN–Transformer Architecture (not started)
+**Phase:** Phase 7 complete; awaiting researcher decision at Gate 3 before Phase 8
 
-**Completed:** Phases 0–6 (Gate 2 passed: 2.5D clearly better than 2D)
+**Completed:** Phases 0–7 (Phase 7 result: Transformer NOT shown to help)
 
 **In Progress:** None
 
-**Next Task:** Phase 7 — add a Transformer module on top of the 5-slice CNN features (new experiment, identical training/eval protocol, `channels` all 5). Compare against the 2.5D CNN reference EXP-002-slices5-s* using 3 seeds + paired bootstrap (`scripts/compare_experiments.py` pattern; extend `discover()`). Note the CNN backbone currently pools to a 4×4 map (64→4 after 4 pools) — define the token interface (e.g. 16 tokens × 128 d).
+**Next Task:** Phase 8 — Attention module. DECISION NEEDED from researcher: build attention on (a) the plain 5-slice CNN (best measured), or (b) on CNN+Transformer (plan E2→E3). Recommendation: evaluate attention on the CNN and also on CNN+Transformer if budget allows, keep the Transformer as an experimental E2 in the ablation table either way (negative results stay in the report).
 
 ---
 
@@ -129,6 +129,18 @@ No NFD or other auxiliary regularization term is used.
 * Decision (validation-based): **5-slice input is the default from Phase 7 on.** Untested: wider context (7 slices / stride 2) needs a new patch cache (`slice_stride`).
 * Epoch time: ~40 s (1-slice) vs ~45–90 s (5-slice) on MPS (timing varies with other load).
 * EXP-001 was re-evaluated once to add the FLOPs field (same checkpoint; CPM unchanged: val 0.632, test 0.675).
+
+---
+
+# CNN–Transformer (Phase 7 results) — Gate 3: not shown useful
+
+* Code: `src/models/backbone/transformer.py` (`TransformerContext`, capacity-matched `ConvContext`, shared interface feature-map→feature-map), `detector.py` composes backbone → optional context → head (`model.context: none|transformer|conv_control`). Configs `cnn_transformer.yaml`, `cnn_extra_conv.yaml`. Runs: `scripts/run_phase7.py` (log `experiments/cnn_transformer/phase7_run.log`, ~4.5 h incl. waiting; resumable), compare: `scripts/compare_phase7.py` → `results/tables/phase7_*`, `results/figures/phase7_*`, notebook `05_model_analysis.ipynb`.
+* Design: CNN map 4×4×128 → 16 tokens (dim 128) + learned pos-emb → 2 pre-norm layers (4 heads, MLP ratio 2, dropout 0.1) → map → unchanged head. Attention uses explicit matmuls (FLOPs countable; verified against analytic count and torch MHA).
+* Results (3 seeds each, val CPM / test CPM): CNN-5slice 0.799±0.019 / 0.869±0.013; **CNN+Transformer 0.774±0.005 / 0.842±0.027**; conv control 0.791±0.004 / 0.839±0.015. Paired bootstrap ΔCPM val: T−CNN −0.024 (95% CI −0.061…+0.009), T−control −0.019 (−0.052…+0.011), control−CNN −0.005 (−0.032…+0.019); test: −0.025 (−0.059…+0.007), +0.003, −0.028 (−0.055…−0.002). → no evidence of benefit; not significantly worse either.
+* Cost: params 302,804 → 570,068 (+88%), FLOPs 109.7 → 118.4 M (+8%), MPS batch-256 latency 25.1 → 31.5 ms, CPU 174 → 197 ms (control 190 ms). Control (598k params) is also no better → not just a capacity effect.
+* Behaviour: Transformer starts slower (epoch-1 val CPM 0.24–0.42) but catches up by ~epoch 5; ends with the lowest train loss without better val CPM. Val CPM fluctuates 0.05–0.1 between epochs for all models → best-epoch selection is noisy.
+* Caveats: coarse 4×4 token grid (16 tokens), same LR as CNN (not tuned for Transformer), 20 epochs, 118/105 eval nodules. Untested variants: finer token grid (earlier CNN stage), LR/epochs tuning, attention before last pooling.
+* A test of the token-mixing unit test caught my own mistake: a constant shift is removed by LayerNorm; use random perturbations.
 
 ---
 

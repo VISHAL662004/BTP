@@ -40,7 +40,9 @@ pytest
 
 ## Status
 
-Phases 0–6 complete. Next: Phase 7 — CNN–Transformer architecture.
+Phases 0–7 complete. Next: Phase 8 — attention module.
+
+Phase 7 (CNN + Transformer, 3 seeds, capacity-matched control): val CPM 0.774 ± 0.005 vs 0.799 ± 0.019 for the 5-slice CNN — no measured benefit (negative result recorded; see `notebooks/05_model_analysis.ipynb`).
 
 Baselines (official LUNA16 FROC/CPM, validation CPM, 3 seeds): 2D CNN 0.620 ± 0.012; 2.5D CNN with 5 slices 0.799 ± 0.019 (test 0.668 → 0.869). Sweep: `python scripts/run_sweep.py`, summary: `python scripts/compare_experiments.py`. See `notebooks/03_baseline_analysis.ipynb`.
 
