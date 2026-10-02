@@ -1,0 +1,129 @@
+{
+  "cache_info": {
+    "channels": 5,
+    "size": 64,
+    "dtype": "uint8 (x/255 -> [0,1])",
+    "seed": 0,
+    "train_negatives": 60000,
+    "counts": {
+      "train": {
+        "n": 61218,
+        "pos": 1218,
+        "pos_with_box": 1218
+      },
+      "val": {
+        "n": 74488,
+        "pos": 195,
+        "pos_with_box": 195
+      },
+      "test": {
+        "n": 75924,
+        "pos": 144,
+        "pos_with_box": 144
+      }
+    }
+  },
+  "A_B_integrity_boundary": {
+    "candidates_near_scan_end": {
+      "train": 19,
+      "val": 0,
+      "test": 0
+    },
+    "positives_near_scan_end": 0,
+    "integrity_checked": 37,
+    "integrity_exact_match": 37,
+    "reversed_order_differs_from_cache": 37,
+    "boundary_checked": 1,
+    "boundary_exact_match": 1,
+    "mismatches": []
+  },
+  "B_all_boundary_candidates": {
+    "candidates_checked": 19,
+    "match_independent_reference": 19,
+    "edge_replication_correct": 19
+  },
+  "C_D_alignment_and_comparison": {
+    "positives": 1557,
+    "boxes_present_frac": 1.0,
+    "box_offset_px": {
+      "median": 0.8454689088119025,
+      "p95": 8.407604330018067,
+      "max": 12.731840561275312
+    },
+    "box_inside_patch_frac": 1.0,
+    "nodule_centre_within_window_frac": 0.8426461143224149,
+    "abs_dz_mm": {
+      "median": 0.5515134800000041,
+      "p95": 5.7030389399999875,
+      "max": 14.756178590000005
+    },
+    "centre_slice_contrast_nodule_minus_ring": {
+      "median": 0.44824519753456116,
+      "frac_positive": 0.9922928709055877
+    },
+    "nodule_profile_by_size": {
+      "small <6 mm": {
+        "n": 486,
+        "mean_profile": [
+          0.3685,
+          0.5389,
+          0.623,
+          0.5631,
+          0.3955
+        ]
+      },
+      "medium 6-10 mm": {
+        "n": 407,
+        "mean_profile": [
+          0.5273,
+          0.6208,
+          0.6534,
+          0.6218,
+          0.5367
+        ]
+      },
+      "large >=10 mm": {
+        "n": 664,
+        "mean_profile": [
+          0.6415,
+          0.6574,
+          0.6625,
+          0.6544,
+          0.6356
+        ]
+      }
+    },
+    "corr_with_centre_slice": {
+      "positives": [
+        0.9383,
+        0.9797,
+        1.0,
+        0.9798,
+        0.9387
+      ],
+      "negatives": [
+        0.9235,
+        0.9743,
+        1.0,
+        0.9744,
+        0.9235
+      ]
+    },
+    "mean_abs_diff_to_centre": {
+      "positives": [
+        0.0507,
+        0.0292,
+        0.0,
+        0.0293,
+        0.0508
+      ],
+      "negatives": [
+        0.053,
+        0.0308,
+        0.0,
+        0.0309,
+        0.0531
+      ]
+    }
+  }
+}

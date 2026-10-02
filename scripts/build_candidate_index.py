@@ -20,7 +20,7 @@ def main():
         for u in pd.read_csv(DATA / "splits" / f"{name}.csv").seriesuid:
             split_of[u] = name
     cands = load_candidates(DATA / "candidates" / "candidates_V2.csv")
-    idx = build_candidate_index(DATA, cands, scans, split_of, log=print)
+    idx = build_candidate_index(DATA, cands, scans, split_of)
     idx.to_csv(DATA / "candidates" / "candidate_index.csv", index=False)
     summ = idx.groupby("split").agg(candidates=("class", "size"), positives=("class", "sum"), in_lung=("in_lung", "mean"))
     pos = idx[idx["class"] == 1]

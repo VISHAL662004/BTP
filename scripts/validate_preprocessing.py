@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.preprocessing.lung_region import point_in_lung
 from src.preprocessing.pipeline import preprocess_scan
 from src.utils.config import load_config
+from src.utils.progress import Progress
 
 DATA = Path("data")
 THR = (-500.0 + 1000.0) / 1400.0   # -500 HU in normalized units
@@ -51,7 +52,7 @@ def main():
     sample = pd.concat([flipped, rest.sample(args.n_random, random_state=0)])
     rng = np.random.default_rng(0)
     rows, t0 = [], time.time()
-    for s in sample.itertuples():
+    for s in Progress(list(sample.itertuples()), desc="alignment check", unit="scan", step_pct=10):
         p = preprocess_scan(DATA, s.subset, s.seriesuid, cfg)
         vol = p.volume
         zl, yl, xl = np.where(p.lung)
@@ -68,7 +69,6 @@ def main():
             i = rng.integers(len(zl))
             row["random_lung"] = sphere_mean(vol, vol.voxel_to_world([xl[i], yl[i], zl[i]]))
             rows.append(row)
-        print(f"{s.seriesuid[-8:]} done ({time.time() - t0:.0f}s)", flush=True)
     df = pd.DataFrame(rows)
     df.to_csv("data/metadata/preprocessing_alignment.csv", index=False)
     res = {

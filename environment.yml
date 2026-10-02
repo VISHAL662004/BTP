@@ -17,6 +17,7 @@ dependencies:
   - jupyter
   - ipykernel
   - pytest
+  - tqdm
   - pip:
       - SimpleITK
       - nibabel

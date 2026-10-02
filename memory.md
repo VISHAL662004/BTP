@@ -19,13 +19,13 @@ The AI should update this file whenever a significant project decision, implemen
 
 # Current State
 
-**Phase:** Phase 5 — 2.5D Data Pipeline (not started)
+**Phase:** Phase 6 — 2.5D CNN Baseline (not started)
 
-**Completed:** Phases 0, 1, 2, 3, 4 (Gate 1 passed; 2D baseline established)
+**Completed:** Phases 0–5
 
 **In Progress:** None
 
-**Next Task:** Phase 5 — 2.5D pipeline. Most of it already exists (`extract_25d_patch`, 5-slice patch cache, `slice_stride`); remaining: verify slice order/boundaries/annotation alignment on the cache, visualize 2D vs 2.5D samples, and compare. Phase 6 trains the 2.5D CNN on `channels: null` (all 5) with identical settings and also reports 1/3/5 slices.
+**Next Task:** Phase 6 — train the 2.5D CNN (`channels: null` = all 5 slices, `in_channels: 5`) with settings identical to EXP-001 (new experiment folder, e.g. EXP-002-baseline-25d), plus 3-slice (`centered_channels(5,3)`) and 1-slice references. Same seed/splits. Report CPM with bootstrap CI (single-seed differences of a few CPM points are noise). Measure params/latency/FLOPs. Wider-stride variants need a new patch cache (`slice_stride`; not built).
 
 ---
 
@@ -105,6 +105,18 @@ No NFD or other auxiliary regularization term is used.
 * Bug found by test: flips/rot90 pivot about (P−1)/2 but the patch centre is pixel P/2 → 1-px shift of image vs box; fixed with a roll after each op (tests added).
 * Experiment folder: `experiments/baseline/EXP-001-baseline-2d/` (config.yaml, history.csv, metrics.json, froc_*.csv tracked; *.pt and training.log git-ignored). Predictions in `results/predictions/` (ignored). Never overwrite experiments: Trainer refuses an existing folder.
 * Run: `python scripts/train.py configs/experiments/baseline.yaml baseline` then `python scripts/evaluate.py experiments/baseline/EXP-001-baseline-2d`.
+
+---
+
+# 2.5D Pipeline (Phase 5 results)
+
+* Validation: `python scripts/validate_25d.py` → `data/metadata/25d_validation.json`, figures `results/figures/exp000_25d_*.png`, notebook `notebooks/04_25d_pipeline_validation.ipynb`.
+* Cache patches bit-exactly equal an independent pad-then-crop re-extraction (37/37; reversed-order control differs 37/37). All 19 candidates within 2 slices of a scan end match the reference with correct edge replication (none are positives; 19 of them in train).
+* All 1,557 positives have boxes inside the patch; 99.2% nodule cores brighter than surrounding ring; nodule centre within the ±2-slice window for 84% (rest are large nodules).
+* Input-level 2D vs 2.5D: adjacent-slice correlation 0.98 (±1), 0.94 (±2). Small (<6 mm) nodule core intensity drops to ~59% of centre at ±2 mm, medium (6–10) to ~81%, large (≥10) ~96–97%. Suggests extra slices matter mostly for small nodules — a hypothesis for Phase 6, not a result.
+* `centered_channels(total, n)` in `src/data/patch_store.py` selects the n centre channels (e.g. 3 of 5 → [1,2,3]).
+* Progress bars: `src/utils/progress.py` (tqdm live bar in a terminal; plain-text `[████░░░░] 5/20 25% | elapsed ETA` lines when redirected). Used by training (epoch + batch bars), cache/index builders, evaluation, validation scripts. Training log with epoch bars: `experiments/<group>/<EXP>/training.log` (git-ignored); `tail -f` it during a run. tqdm added to the environment (conda-forge).
+* Reproducibility check: the first epoch of a re-run with seed 42 gave exactly the same loss (0.6549) as EXP-001.
 
 ---
 

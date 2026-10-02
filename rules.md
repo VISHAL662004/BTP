@@ -804,6 +804,9 @@ Visualization
 
 Testing
     pytest
+
+Utilities
+    tqdm (progress bars)
 ```
 
 Additional libraries require justification.

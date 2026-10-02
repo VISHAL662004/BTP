@@ -228,8 +228,9 @@ lung-nodule-detection/
 │   ├── 01_data_exploration.ipynb
 │   ├── 02_preprocessing_validation.ipynb
 │   ├── 03_baseline_analysis.ipynb
-│   ├── 04_model_analysis.ipynb
-│   └── 05_results_analysis.ipynb
+│   ├── 04_25d_pipeline_validation.ipynb
+│   ├── 05_model_analysis.ipynb
+│   └── 06_results_analysis.ipynb
 │
 ├── src/
 │   │
@@ -925,6 +926,7 @@ The initial technology stack may include:
 | nibabel      | Medical imaging formats where required             |
 | PyYAML       | Configuration                                      |
 | matplotlib   | Visualization                                      |
+| tqdm         | Progress bars (training / pipelines)               |
 | pytest       | Testing                                            |
 
 Additional libraries should only be introduced when they provide a clear technical requirement.

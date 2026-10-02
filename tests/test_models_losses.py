@@ -74,3 +74,11 @@ def test_random_dihedral_preserves_pixel_count():
     x = torch.rand(32, 1, 16, 16); b = torch.zeros(32, 3)
     xo, _ = random_dihedral(x, b, torch.Generator().manual_seed(0))
     assert torch.allclose(xo.sum((1, 2, 3)), x.sum((1, 2, 3)))
+
+
+def test_centered_channels():
+    import pytest
+    from src.data.patch_store import centered_channels
+    assert centered_channels(5, 1) == [2] and centered_channels(5, 3) == [1, 2, 3] and centered_channels(5, 5) == [0, 1, 2, 3, 4]
+    with pytest.raises(ValueError):
+        centered_channels(5, 2)

@@ -12,3 +12,4 @@ matplotlib
 jupyter
 ipykernel
 pytest
+tqdm

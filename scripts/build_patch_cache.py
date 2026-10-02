@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.preprocessing.patches import extract_25d_patch
 from src.preprocessing.pipeline import preprocess_scan
 from src.utils.config import load_config
+from src.utils.progress import Progress
 
 DATA, OUT = Path("data"), Path("data/processed")
 CFG = None
@@ -83,11 +84,9 @@ def main():
     print({s: len(d) for s, d in parts.items()}, "scans:", len(jobs), flush=True)
     t0 = time.time()
     with mp.get_context("spawn").Pool(args.workers, initializer=_init, initargs=(cfg,)) as pool:
-        for n, (s, rows, patches, boxes) in enumerate(pool.imap_unordered(_work, jobs), 1):
+        for s, rows, patches, boxes in Progress(pool.imap_unordered(_work, jobs), total=len(jobs), desc="patch cache", unit="scan", step_pct=5):
             mm[s][rows] = patches
             parts[s].loc[rows, ["box_dx", "box_dy", "box_d"]] = boxes
-            if n % 25 == 0:
-                print(f"{n}/{len(jobs)} scans, {time.time() - t0:.0f}s", flush=True)
     for s, df in parts.items():
         mm[s].flush()
         df = df.rename(columns={"class": "label"})

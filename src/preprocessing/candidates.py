@@ -4,6 +4,7 @@ import pandas as pd
 
 from .lung_region import lung_binary, point_in_lung
 from .io import load_lung_mask
+from src.utils.progress import Progress
 
 
 def canonical_origin(row) -> tuple:
@@ -17,9 +18,9 @@ def canonical_origin(row) -> tuple:
 
 
 def build_candidate_index(data_dir, cands: pd.DataFrame, scans: pd.DataFrame, split_of: dict,
-                          lung_labels=(3, 4), dilate_mm: float = 5.0, log=None) -> pd.DataFrame:
+                          lung_labels=(3, 4), dilate_mm: float = 5.0) -> pd.DataFrame:
     parts = []
-    for n, row in enumerate(scans.itertuples()):
+    for row in Progress(list(scans.itertuples()), desc="candidate index", unit="scan"):
         c = cands[cands.seriesuid == row.seriesuid].copy()
         if c.empty:
             continue
@@ -33,6 +34,4 @@ def build_candidate_index(data_dir, cands: pd.DataFrame, scans: pd.DataFrame, sp
         c["split"] = split_of[row.seriesuid]
         c["subset"] = row.subset
         parts.append(c)
-        if log and (n + 1) % 100 == 0:
-            log(f"{n + 1}/{len(scans)} scans")
     return pd.concat(parts, ignore_index=True)

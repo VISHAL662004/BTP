@@ -6,6 +6,14 @@ import pandas as pd
 import torch
 
 
+def centered_channels(total: int, n: int) -> list:
+    """Indices of the n centre-most channels of a `total`-channel odd stack, e.g. (5, 3) -> [1, 2, 3]."""
+    if total % 2 == 0 or n % 2 == 0 or not 1 <= n <= total:
+        raise ValueError(f"total and n must be odd with 1 <= n <= total, got total={total}, n={n}")
+    lo = (total - n) // 2
+    return list(range(lo, lo + n))
+
+
 class PatchStore:
     """Loads cached candidate patches. `channels`: list of channel indices to keep
     (e.g. [2] = centre slice of 5 for the 2D baseline) or None for all."""

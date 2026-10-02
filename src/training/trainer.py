@@ -14,6 +14,7 @@ from src.evaluation.evaluator import evaluate_store
 from src.losses.detection_loss import DetectionLoss
 from src.models.detector import build_detector
 from src.utils.device import get_device
+from src.utils.progress import Progress, text_bar
 from src.utils.seed import set_seed
 
 
@@ -53,6 +54,7 @@ class Trainer:
         self.val_uids = pd.read_csv(Path(ev["splits_dir"]) / "val.csv").seriesuid.tolist()
         self.gen = torch.Generator().manual_seed(cfg["experiment"]["seed"])
         self.best = -1.0
+        self._epoch = 0
         self.log.info(f"device={self.device} params={count_parameters(self.model)}")
         self.log.info(f"train={len(self.train)} (pos {int(self.train.y.sum())}) val={len(self.val)} (pos {int(self.val.y.sum())})")
 
@@ -66,7 +68,9 @@ class Trainer:
         self.model.train()
         bs, agg, n = self.cfg["training"]["batch_size"], {"loss": 0.0, "focal": 0.0, "loc": 0.0}, 0
         idx = self._epoch_indices()
-        for i in range(0, len(idx), bs):
+        pbar = Progress(range(0, len(idx), bs), desc=f"  epoch {self._epoch}/{self.cfg['training']['epochs']} train",
+                        leave=False, unit="batch", quiet_when_redirected=True)
+        for i in pbar:
             b = idx[i:i + bs]
             x = self.train.x[b].float() / 255.0
             box = self.train.box[b]
@@ -84,6 +88,7 @@ class Trainer:
             for k in agg:
                 agg[k] += parts[k] * len(b)
             n += len(b)
+            pbar.set_postfix(loss=agg["loss"] / n)
         return {k: v / n for k, v in agg.items()}
 
     def checkpoint(self, name, epoch):
@@ -94,7 +99,10 @@ class Trainer:
 
     def fit(self):
         hist = []
-        for epoch in range(1, self.cfg["training"]["epochs"] + 1):
+        E = self.cfg["training"]["epochs"]
+        epochs = Progress(range(1, E + 1), desc="epochs", unit="epoch", step_pct=5)
+        for epoch in epochs:
+            self._epoch = epoch
             t0 = time.time()
             tr = self.train_epoch()
             res, _ = evaluate_store(self.model, self.val, self.device, self.val_uids, self.ann, self.exc,
@@ -109,7 +117,8 @@ class Trainer:
             self.checkpoint("last.pt", epoch)
             if improved:
                 self.checkpoint("best.pt", epoch)
-            self.log.info(f"epoch {epoch:02d} loss {tr['loss']:.4f} (focal {tr['focal']:.4f} loc {tr['loc']:.4f}) "
+            epochs.set_postfix(loss=tr["loss"], val_cpm=res.cpm, best=self.best)
+            self.log.info(f"epoch {epoch:02d}/{E} [{text_bar(epoch, E)}] loss {tr['loss']:.4f} (focal {tr['focal']:.4f} loc {tr['loc']:.4f}) "
                           f"val CPM {res.cpm:.4f} sens@1 {res.sensitivity_at[1]:.3f} {'*best*' if improved else ''} {row['seconds']:.0f}s")
             if self.sched:
                 self.sched.step()

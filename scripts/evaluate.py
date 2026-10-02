@@ -25,6 +25,7 @@ from src.evaluation.evaluator import predict_proba, score
 from src.evaluation.froc import FP_RATES
 from src.models.detector import build_detector
 from src.utils.device import get_device
+from src.utils.progress import Progress
 
 
 def main():
@@ -48,7 +49,7 @@ def main():
                "device": str(device), "protocol": f"LUNA16 FROC/CPM, max {ev['max_marks_per_scan']} marks/scan"}
     fig, ax = plt.subplots(figsize=(6, 4.2))
     rng = np.random.default_rng(0)
-    for split, color in (("val", "#2563EB"), ("test", "#0F766E")):
+    for split, color in Progress([("val", "#2563EB"), ("test", "#0F766E")], desc="evaluating splits", unit="split", step_pct=50):
         store = PatchStore(cfg["data"]["cache_dir"], split, cfg["data"]["channels"])
         uids = pd.read_csv(Path(ev["splits_dir"]) / f"{split}.csv").seriesuid.tolist()
         prob = predict_proba(model, store, device)
