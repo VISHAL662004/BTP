@@ -20,15 +20,18 @@ venv/
 env/
 .conda/
 
-# ---- Dataset (LUNA16, ~60 GB; never commit raw/processed CT) ----
+# ---- Dataset (LUNA16, ~66 GB; never commit raw/processed CT) ----
+# Only small, derived files are tracked: annotations.csv, data/metadata/, data/splits/, data/README.md.
+# candidates*.csv (54-72 MB each) are re-downloadable and exceed GitHub's 50 MB warning size.
 data/*
 !data/.gitkeep
+!data/README.md
 !data/annotations.csv
-!data/candidates.csv
-!data/candidates_V2.csv
-!data/sampleSubmission.csv
 !data/metadata/
 !data/splits/
+data/candidates.csv
+data/candidates_V2.csv
+data/sampleSubmission.csv
 data/raw/
 data/processed/
 data/candidates/
@@ -40,7 +43,15 @@ data/candidates/
 *.npy
 *.npz
 
+# ---- Generated caches / local tooling ----
+.claude/
+nohup.out
+.coverage
+htmlcov/
+
 # ---- Experiment artifacts ----
+# (checkpoints, logs and predictions are regenerable; configs, history.csv, metrics.json and
+#  froc_*.csv inside experiments/ ARE tracked)
 checkpoints/
 logs/
 runs/
@@ -48,6 +59,7 @@ wandb/
 *.pt
 *.pth
 *.ckpt
+*.safetensors
 results/predictions/
 
 # ---- Project report build files / reference papers ----
