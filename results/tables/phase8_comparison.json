@@ -1,0 +1,552 @@
+{
+  "summary": [
+    {
+      "model": "CNN (5 slices)",
+      "runs": 3,
+      "val_cpm_mean": 0.7986279257465698,
+      "val_cpm_std": 0.01923123899506683,
+      "test_cpm_mean": 0.8693877551020409,
+      "test_cpm_std": 0.01312061328026256,
+      "val_sens1": 0.827683615819209,
+      "test_sens1": 0.9111111111111111
+    },
+    {
+      "model": "CNN + SE",
+      "runs": 3,
+      "val_cpm_mean": 0.784907183212268,
+      "val_cpm_std": 0.0055917701616428105,
+      "test_cpm_mean": 0.8517006802721089,
+      "test_cpm_std": 0.01919283806757266,
+      "val_sens1": 0.8135593220338984,
+      "test_sens1": 0.8984126984126984
+    },
+    {
+      "model": "CNN + CBAM",
+      "runs": 3,
+      "val_cpm_mean": 0.7998385794995965,
+      "val_cpm_std": 0.007783414657782855,
+      "test_cpm_mean": 0.8489795918367348,
+      "test_cpm_std": 0.004905511939406871,
+      "val_sens1": 0.824858757062147,
+      "test_sens1": 0.8984126984126984
+    },
+    {
+      "model": "CNN + Transformer (ref.)",
+      "runs": 3,
+      "val_cpm_mean": 0.7736077481840193,
+      "val_cpm_std": 0.005277117365061333,
+      "test_cpm_mean": 0.8417233560090703,
+      "test_cpm_std": 0.027017453076837127,
+      "val_sens1": 0.8163841807909605,
+      "test_sens1": 0.8984126984126984
+    }
+  ],
+  "runs": [
+    {
+      "model": "CNN (5 slices)",
+      "experiment": "EXP-002-slices5-s42",
+      "seed": 42,
+      "best_epoch": 16,
+      "val_cpm": 0.7881355932203389,
+      "test_cpm": 0.854421768707483,
+      "val_sens@1": 0.8050847457627118,
+      "test_sens@1": 0.9238095238095239
+    },
+    {
+      "model": "CNN (5 slices)",
+      "experiment": "EXP-002-slices5-s43",
+      "seed": 43,
+      "best_epoch": 13,
+      "val_cpm": 0.8208232445520581,
+      "test_cpm": 0.8789115646258504,
+      "val_sens@1": 0.864406779661017,
+      "test_sens@1": 0.9047619047619048
+    },
+    {
+      "model": "CNN (5 slices)",
+      "experiment": "EXP-002-slices5-s44",
+      "seed": 44,
+      "best_epoch": 15,
+      "val_cpm": 0.7869249394673122,
+      "test_cpm": 0.8748299319727891,
+      "val_sens@1": 0.8135593220338984,
+      "test_sens@1": 0.9047619047619048
+    },
+    {
+      "model": "CNN + SE",
+      "experiment": "EXP-004-attention-se-s42",
+      "seed": 42,
+      "best_epoch": 13,
+      "val_cpm": 0.7784503631961259,
+      "test_cpm": 0.8693877551020408,
+      "val_sens@1": 0.8220338983050848,
+      "test_sens@1": 0.9142857142857143
+    },
+    {
+      "model": "CNN + SE",
+      "experiment": "EXP-004-attention-se-s43",
+      "seed": 43,
+      "best_epoch": 10,
+      "val_cpm": 0.788135593220339,
+      "test_cpm": 0.854421768707483,
+      "val_sens@1": 0.8135593220338984,
+      "test_sens@1": 0.8952380952380953
+    },
+    {
+      "model": "CNN + SE",
+      "experiment": "EXP-004-attention-se-s44",
+      "seed": 44,
+      "best_epoch": 10,
+      "val_cpm": 0.788135593220339,
+      "test_cpm": 0.8312925170068027,
+      "val_sens@1": 0.8050847457627118,
+      "test_sens@1": 0.8857142857142857
+    },
+    {
+      "model": "CNN + CBAM",
+      "experiment": "EXP-004-attention-cbam-s42",
+      "seed": 42,
+      "best_epoch": 12,
+      "val_cpm": 0.7941888619854721,
+      "test_cpm": 0.8544217687074831,
+      "val_sens@1": 0.847457627118644,
+      "test_sens@1": 0.9238095238095239
+    },
+    {
+      "model": "CNN + CBAM",
+      "experiment": "EXP-004-attention-cbam-s43",
+      "seed": 43,
+      "best_epoch": 9,
+      "val_cpm": 0.7966101694915254,
+      "test_cpm": 0.8448979591836735,
+      "val_sens@1": 0.8220338983050848,
+      "test_sens@1": 0.8571428571428571
+    },
+    {
+      "model": "CNN + CBAM",
+      "experiment": "EXP-004-attention-cbam-s44",
+      "seed": 44,
+      "best_epoch": 10,
+      "val_cpm": 0.8087167070217918,
+      "test_cpm": 0.8476190476190476,
+      "val_sens@1": 0.8050847457627118,
+      "test_sens@1": 0.9142857142857143
+    },
+    {
+      "model": "CNN + Transformer (ref.)",
+      "experiment": "EXP-003-cnn-transformer-s42",
+      "seed": 42,
+      "best_epoch": 11,
+      "val_cpm": 0.7772397094430993,
+      "test_cpm": 0.8476190476190476,
+      "val_sens@1": 0.8050847457627118,
+      "test_sens@1": 0.8952380952380953
+    },
+    {
+      "model": "CNN + Transformer (ref.)",
+      "experiment": "EXP-003-cnn-transformer-s43",
+      "seed": 43,
+      "best_epoch": 13,
+      "val_cpm": 0.7675544794188862,
+      "test_cpm": 0.8122448979591838,
+      "val_sens@1": 0.8135593220338984,
+      "test_sens@1": 0.8666666666666667
+    },
+    {
+      "model": "CNN + Transformer (ref.)",
+      "experiment": "EXP-003-cnn-transformer-s44",
+      "seed": 44,
+      "best_epoch": 18,
+      "val_cpm": 0.7760290556900725,
+      "test_cpm": 0.8653061224489796,
+      "val_sens@1": 0.8305084745762712,
+      "test_sens@1": 0.9333333333333333
+    }
+  ],
+  "bootstrap": {
+    "val": {
+      "CNN (5 slices)": {
+        "cpm_mean": 0.7971456456179091,
+        "ci95": [
+          0.7213083641629614,
+          0.8630412164865945
+        ]
+      },
+      "CNN + SE": {
+        "cpm_mean": 0.7832314210326804,
+        "ci95": [
+          0.7153475466073821,
+          0.8451271162670675
+        ]
+      },
+      "CNN + CBAM": {
+        "cpm_mean": 0.7991149024084547,
+        "ci95": [
+          0.7277688834154352,
+          0.8631877022653721
+        ]
+      },
+      "CNN + Transformer (ref.)": {
+        "cpm_mean": 0.7726530062612771,
+        "ci95": [
+          0.6971950808625338,
+          0.8432851508321776
+        ]
+      },
+      "CNN + SE minus CNN (5 slices)": {
+        "delta_cpm": -0.013914224585228813,
+        "ci95": [
+          -0.034652169535890294,
+          0.009222302624062113
+        ],
+        "p(delta<=0)": 0.889
+      },
+      "CNN + CBAM minus CNN (5 slices)": {
+        "delta_cpm": 0.0019692567905455656,
+        "ci95": [
+          -0.021081534547611257,
+          0.028573446327683515
+        ],
+        "p(delta<=0)": 0.468
+      },
+      "CNN + CBAM minus CNN + SE": {
+        "delta_cpm": 0.015883481375774382,
+        "ci95": [
+          -0.007734995039682588,
+          0.03793313535131861
+        ],
+        "p(delta<=0)": 0.081
+      },
+      "CNN + CBAM minus CNN + Transformer (ref.)": {
+        "delta_cpm": 0.026461896147177637,
+        "ci95": [
+          -0.006802721088435162,
+          0.06311973009268432
+        ],
+        "p(delta<=0)": 0.066
+      }
+    },
+    "test": {
+      "CNN (5 slices)": {
+        "cpm_mean": 0.8683271571241878,
+        "ci95": [
+          0.8177777384199402,
+          0.9183267409804625
+        ]
+      },
+      "CNN + SE": {
+        "cpm_mean": 0.8539516879956549,
+        "ci95": [
+          0.7993987930995805,
+          0.9070102883920866
+        ]
+      },
+      "CNN + CBAM": {
+        "cpm_mean": 0.8492104276665187,
+        "ci95": [
+          0.7949976742833886,
+          0.9010460434173669
+        ]
+      },
+      "CNN + Transformer (ref.)": {
+        "cpm_mean": 0.8433556343847747,
+        "ci95": [
+          0.7946370927318296,
+          0.8974439775910364
+        ]
+      },
+      "CNN + SE minus CNN (5 slices)": {
+        "delta_cpm": -0.014375469128532896,
+        "ci95": [
+          -0.041088724646484956,
+          0.01159646659646645
+        ],
+        "p(delta<=0)": 0.88
+      },
+      "CNN + CBAM minus CNN (5 slices)": {
+        "delta_cpm": -0.019116729457669124,
+        "ci95": [
+          -0.052554278416347536,
+          0.013676859632742101
+        ],
+        "p(delta<=0)": 0.888
+      },
+      "CNN + CBAM minus CNN + SE": {
+        "delta_cpm": -0.004741260329136223,
+        "ci95": [
+          -0.028672446422177974,
+          0.021001541473982418
+        ],
+        "p(delta<=0)": 0.653
+      },
+      "CNN + CBAM minus CNN + Transformer (ref.)": {
+        "delta_cpm": 0.005854793281743994,
+        "ci95": [
+          -0.027737395167376156,
+          0.038876674791696514
+        ],
+        "p(delta<=0)": 0.363
+      }
+    }
+  },
+  "by_size_at_1fp": {
+    "val": {
+      "CNN (5 slices)": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8444444444444444
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.7450980392156863
+        },
+        ">=10 mm": {
+          "nodules": 39,
+          "sensitivity": 0.8803418803418804
+        }
+      },
+      "CNN + SE": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.837037037037037
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.7352941176470589
+        },
+        ">=10 mm": {
+          "nodules": 39,
+          "sensitivity": 0.8547008547008548
+        }
+      },
+      "CNN + CBAM": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8148148148148149
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.7647058823529411
+        },
+        ">=10 mm": {
+          "nodules": 39,
+          "sensitivity": 0.8888888888888888
+        }
+      },
+      "CNN + Transformer (ref.)": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8222222222222223
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.7156862745098039
+        },
+        ">=10 mm": {
+          "nodules": 39,
+          "sensitivity": 0.8974358974358975
+        }
+      }
+    },
+    "test": {
+      "CNN (5 slices)": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8814814814814814
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.8823529411764706
+        },
+        ">=10 mm": {
+          "nodules": 26,
+          "sensitivity": 1.0
+        }
+      },
+      "CNN + SE": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8962962962962964
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.8333333333333334
+        },
+        ">=10 mm": {
+          "nodules": 26,
+          "sensitivity": 0.9871794871794872
+        }
+      },
+      "CNN + CBAM": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8814814814814814
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.8529411764705882
+        },
+        ">=10 mm": {
+          "nodules": 26,
+          "sensitivity": 0.9871794871794872
+        }
+      },
+      "CNN + Transformer (ref.)": {
+        "<6 mm": {
+          "nodules": 45,
+          "sensitivity": 0.8444444444444444
+        },
+        "6-10 mm": {
+          "nodules": 34,
+          "sensitivity": 0.892156862745098
+        },
+        ">=10 mm": {
+          "nodules": 26,
+          "sensitivity": 1.0
+        }
+      }
+    }
+  },
+  "efficiency": [
+    {
+      "model": "CNN (5 slices)",
+      "parameters": 302804,
+      "trainable": 302804,
+      "nonzero": 302129,
+      "sparsity": 0.0022291647402280512,
+      "model_size_mb": 1.211216,
+      "flops_per_sample": 109724160.0,
+      "macs_per_sample": 54862080.0,
+      "input_shape": [
+        1,
+        5,
+        64,
+        64
+      ],
+      "parameters_mb": 1.21512,
+      "activations_mb_per_sample": 3.073808,
+      "peak_live_mb_per_sample": 0.524288,
+      "latency_ms_cpu_b1": 2.030707359313965,
+      "latency_ms_cpu_b256": 166.78854370117188,
+      "latency_ms_mps_b256": 24.489458084106445
+    },
+    {
+      "model": "CNN + SE",
+      "parameters": 313984,
+      "trainable": 313984,
+      "nonzero": 313309,
+      "sparsity": 0.002149791072156515,
+      "model_size_mb": 1.255936,
+      "flops_per_sample": 109745920.0,
+      "macs_per_sample": 54872960.0,
+      "input_shape": [
+        1,
+        5,
+        64,
+        64
+      ],
+      "parameters_mb": 1.25984,
+      "activations_mb_per_sample": 3.075248,
+      "peak_live_mb_per_sample": 0.524288,
+      "latency_ms_cpu_b1": 2.0494446754455566,
+      "latency_ms_cpu_b256": 175.45123291015625,
+      "latency_ms_mps_b256": 31.50763511657715
+    },
+    {
+      "model": "CNN + CBAM",
+      "parameters": 314380,
+      "trainable": 314380,
+      "nonzero": 313705,
+      "sparsity": 0.002147083147782891,
+      "model_size_mb": 1.25752,
+      "flops_per_sample": 110833920.0,
+      "macs_per_sample": 55416960.0,
+      "input_shape": [
+        1,
+        5,
+        64,
+        64
+      ],
+      "parameters_mb": 1.261424,
+      "activations_mb_per_sample": 3.098448,
+      "peak_live_mb_per_sample": 0.524288,
+      "latency_ms_cpu_b1": 2.5284056663513184,
+      "latency_ms_cpu_b256": 198.10980224609375,
+      "latency_ms_mps_b256": 46.29396057128906
+    },
+    {
+      "model": "CNN + Transformer (ref.)",
+      "parameters": 570068,
+      "trainable": 570068,
+      "nonzero": 568753,
+      "sparsity": 0.002306742353543778,
+      "model_size_mb": 2.280272,
+      "flops_per_sample": 118374912.0,
+      "macs_per_sample": 59187456.0,
+      "input_shape": [
+        1,
+        5,
+        64,
+        64
+      ],
+      "parameters_mb": 2.284176,
+      "activations_mb_per_sample": 3.319568,
+      "peak_live_mb_per_sample": 0.524288,
+      "latency_ms_cpu_b1": 2.52207088470459,
+      "latency_ms_cpu_b256": 183.13388061523438,
+      "latency_ms_mps_b256": 30.888784408569336
+    }
+  ],
+  "attention_analysis": {
+    "stages": [
+      {
+        "stage": 0,
+        "spatial_inside_nodule": 0.3841252326965332,
+        "spatial_outside_nodule": 0.4168347418308258,
+        "ratio_inside_over_outside": 0.9219242930412292,
+        "frac_positives_inside_gt_outside": 0.06666666666666667,
+        "mean_spatial_on_negatives": 0.41113540530204773,
+        "channel_gate_mean_pos": 0.470254510641098,
+        "channel_gate_mean_neg": 0.4697726368904114,
+        "channel_gate_mean_abs_diff_pos_vs_neg": 0.006411341018974781,
+        "channel_gate_max_abs_diff_pos_vs_neg": 0.013865470886230469
+      },
+      {
+        "stage": 1,
+        "spatial_inside_nodule": 0.49713364243507385,
+        "spatial_outside_nodule": 0.5093861222267151,
+        "ratio_inside_over_outside": 0.9761688113212585,
+        "frac_positives_inside_gt_outside": 0.26666666666666666,
+        "mean_spatial_on_negatives": 0.5076433420181274,
+        "channel_gate_mean_pos": 0.46943968534469604,
+        "channel_gate_mean_neg": 0.47472599148750305,
+        "channel_gate_mean_abs_diff_pos_vs_neg": 0.011082952842116356,
+        "channel_gate_max_abs_diff_pos_vs_neg": 0.023907124996185303
+      },
+      {
+        "stage": 2,
+        "spatial_inside_nodule": 0.879551351070404,
+        "spatial_outside_nodule": 0.7907112240791321,
+        "ratio_inside_over_outside": 1.1117067337036133,
+        "frac_positives_inside_gt_outside": 1.0,
+        "mean_spatial_on_negatives": 0.7583737373352051,
+        "channel_gate_mean_pos": 0.38345685601234436,
+        "channel_gate_mean_neg": 0.4135434031486511,
+        "channel_gate_mean_abs_diff_pos_vs_neg": 0.08072993904352188,
+        "channel_gate_max_abs_diff_pos_vs_neg": 0.17472553253173828
+      },
+      {
+        "stage": 3,
+        "spatial_inside_nodule": 0.985008180141449,
+        "spatial_outside_nodule": 0.9107739329338074,
+        "ratio_inside_over_outside": 1.0825366973876953,
+        "frac_positives_inside_gt_outside": 1.0,
+        "mean_spatial_on_negatives": 0.8328204154968262,
+        "channel_gate_mean_pos": 0.5984734296798706,
+        "channel_gate_mean_neg": 0.5292584896087646,
+        "channel_gate_mean_abs_diff_pos_vs_neg": 0.2605232000350952,
+        "channel_gate_max_abs_diff_pos_vs_neg": 0.8373711705207825
+      }
+    ]
+  }
+}

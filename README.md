@@ -40,7 +40,9 @@ pytest
 
 ## Status
 
-Phases 0–7 complete. Next: Phase 8 — attention module.
+Phases 0–8 complete. Next: Phase 9 — progressive pruning.
+
+Phase 8 (SE / CBAM attention on the 5-slice CNN, 3 seeds): val CPM 0.785 / 0.800 vs 0.799 for the CNN — no measurable gain, CBAM +89% MPS latency (negative result recorded).
 
 Phase 7 (CNN + Transformer, 3 seeds, capacity-matched control): val CPM 0.774 ± 0.005 vs 0.799 ± 0.019 for the 5-slice CNN — no measured benefit (negative result recorded; see `notebooks/05_model_analysis.ipynb`).
 

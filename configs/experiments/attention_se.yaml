@@ -1,0 +1,52 @@
+# Phase 8 — Squeeze-and-Excitation channel attention (EXP-004 SE)
+# Identical to the 2.5D CNN reference (EXP-002-slices5-*) except for the attention modules (after every CNN stage).
+experiment:
+  name: EXP-004-attention-se
+  seed: 42
+data:
+  cache_dir: data/processed
+  channels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  pos_repeat: 10
+  augment: dihedral
+model:
+  backbone: simple_cnn
+  in_channels: 5
+  widths:
+  - 16
+  - 32
+  - 64
+  - 128
+  head_hidden: 64
+  dropout: 0.2
+  attention:
+    type: se
+    reduction: 4
+    stages:
+    - 0
+    - 1
+    - 2
+    - 3
+training:
+  batch_size: 256
+  epochs: 20
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler: cosine
+  selection_metric: val_cpm
+loss:
+  lambda_cls: 1.0
+  lambda_loc: 1.0
+  focal_alpha: 0.25
+  focal_gamma: 2.0
+evaluation:
+  annotations: data/annotations.csv
+  excluded: data/annotations/annotations_excluded.csv
+  splits_dir: data/splits
+  max_marks_per_scan: 100
+pruning:
+  enabled: false

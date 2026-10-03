@@ -19,13 +19,13 @@ The AI should update this file whenever a significant project decision, implemen
 
 # Current State
 
-**Phase:** Phase 7 complete; awaiting researcher decision at Gate 3 before Phase 8
+**Phase:** Phase 8 complete (attention: no measurable gain); awaiting researcher decision on the pruning base model before Phase 9
 
-**Completed:** Phases 0–7 (Phase 7 result: Transformer NOT shown to help)
+**Completed:** Phases 0–8
 
 **In Progress:** None
 
-**Next Task:** Phase 8 — Attention module. DECISION NEEDED from researcher: build attention on (a) the plain 5-slice CNN (best measured), or (b) on CNN+Transformer (plan E2→E3). Recommendation: evaluate attention on the CNN and also on CNN+Transformer if budget allows, keep the Transformer as an experimental E2 in the ablation table either way (negative results stay in the report).
+**Next Task:** Phase 9 — Progressive pruning. DECISION NEEDED: which unpruned reference to prune. Evidence so far (val CPM, 3 seeds): CNN-5slice 0.799, +CBAM 0.800, +SE 0.785, +Transformer 0.774. Recommendation: prune the plain 5-slice CNN (simplest, best cost/performance; Transformer/attention gave no measured benefit) and keep E2/E3 as negative-result rows in the ablation table. Pruning study design: structured (channel) vs unstructured, schedule, fine-tune, report params/FLOPs/latency/sparsity/CPM (rules.md sections 21–22: sparsity != speed-up must be measured).
 
 ---
 
@@ -141,6 +141,17 @@ No NFD or other auxiliary regularization term is used.
 * Behaviour: Transformer starts slower (epoch-1 val CPM 0.24–0.42) but catches up by ~epoch 5; ends with the lowest train loss without better val CPM. Val CPM fluctuates 0.05–0.1 between epochs for all models → best-epoch selection is noisy.
 * Caveats: coarse 4×4 token grid (16 tokens), same LR as CNN (not tuned for Transformer), 20 epochs, 118/105 eval nodules. Untested variants: finer token grid (earlier CNN stage), LR/epochs tuning, attention before last pooling.
 * A test of the token-mixing unit test caught my own mistake: a constant shift is removed by LayerNorm; use random perturbations.
+
+---
+
+# Attention (Phase 8 results) — Gate 4: no measurable value
+
+* Code: `src/models/attention/attention.py` (`SqueezeExcitation`, `CBAM` = channel+7×7 spatial; shared feature-map→feature-map interface; `keep` flag stores gates/maps), `SimpleCNN(attention=…, attention_stages=…)` inserts after each stage's convs before the pool; config `model.attention: {type: none|se|cbam, reduction: 4, stages: [0,1,2,3]}` (old configs with `attention: false` still build; old checkpoints load strictly). Configs `attention_se.yaml`, `attention_cbam.yaml`. Runs `scripts/run_phase8.py` (log `experiments/attention/phase8_run.log`, ~3.5 h; CBAM epochs ~2 min), compare `scripts/compare_phase8.py` → `results/tables/phase8_*`, `results/figures/phase8_*`, notebook `05_model_analysis.ipynb` (Phase 8 section).
+* Results (3 seeds, val / test CPM): CNN 0.799±0.019 / 0.869±0.013; +SE 0.785±0.006 / 0.852±0.019; +CBAM 0.800±0.008 / 0.849±0.005. Paired ΔCPM vs CNN (val): SE −0.014 (CI −0.035…+0.009), CBAM +0.002 (−0.021…+0.029); test: −0.014, −0.019 (CIs include 0). CBAM−SE val +0.016 (−0.008…+0.038).
+* Cost (measured idle machine, interleaved median of 3 rounds): params 302,804 → 313,984 (SE) / 314,380 (CBAM) (+3.7%); FLOPs 109.72 M → 109.75 / 110.83 M; activation memory 3.074 → 3.075 / 3.098 MB per sample (peak live 0.524 unchanged); latency CPU b1 2.03 → 2.05 / 2.53 ms, CPU b256 167 → 175 / 198 ms, MPS b256 24.5 → 31.5 / 46.3 ms. Transformer ref: 570,068 params, 118.4 MFLOPs, 3.32 MB act, MPS 30.9 ms, CPU b256 183 ms. FLOPs ≠ latency (launch-bound small kernels on MPS). These are the quiet-condition latencies that supersede the noisy Phase 6/7 values.
+* Interpretability (CBAM s42, val positives): spatial attention stages 1–2 ≈ tissue-density map (not nodule-specific); stages 3–4 near-saturated, only 8–11% higher inside nodule box than outside; channel gates differ pos-vs-neg mainly at stage 4 (mean |Δ| 0.26) ≈ 0 at stages 1–2. Descriptive, not causal.
+* Added `src/efficiency/memory.py` (hook-based activation/parameter memory, per sample) — first time memory is measured; computed for all models in `phase8_efficiency.csv`.
+* Mistake caught during phase: a stray shell line aborted one command batch (configs/tests not yet written); verified by listing files before re-running — always check what a failed batch actually wrote.
 
 ---
 
