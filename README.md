@@ -40,7 +40,9 @@ pytest
 
 ## Status
 
-Phases 0–8 complete. Next: Phase 9 — progressive pruning.
+Phases 0–9 complete. Next: Phase 10 — complete model (choose the final pruned model).
+
+Phase 9 (progressive pruning of all 5 models, unstructured + structured): the plain CNN keeps test CPM 0.846 at 70% sparsity (dense 0.854) but unstructured pruning gives **no speed-up**; structured pruning gives real speed-ups (−28% latency at −50% parameters) at a larger accuracy cost. See `notebooks/06_pruning_analysis.ipynb`.
 
 Phase 8 (SE / CBAM attention on the 5-slice CNN, 3 seeds): val CPM 0.785 / 0.800 vs 0.799 for the CNN — no measurable gain, CBAM +89% MPS latency (negative result recorded).
 

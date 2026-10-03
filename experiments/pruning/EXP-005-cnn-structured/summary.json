@@ -1,0 +1,13 @@
+{
+ "experiment": "EXP-005-cnn-structured",
+ "source": "experiments/baseline/EXP-002-slices5-s42",
+ "type": "structured",
+ "fine_tune": {
+  "epochs_per_level": 4,
+  "learning_rate": 0.0003,
+  "max_val_cpm_drop": 0.02
+ },
+ "reference_val_cpm": 0.7881355932203389,
+ "selected_level": null,
+ "selected": null
+}

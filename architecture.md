@@ -230,7 +230,8 @@ lung-nodule-detection/
 │   ├── 03_baseline_analysis.ipynb
 │   ├── 04_25d_pipeline_validation.ipynb
 │   ├── 05_model_analysis.ipynb
-│   └── 06_results_analysis.ipynb
+│   ├── 06_pruning_analysis.ipynb
+│   └── 07_results_analysis.ipynb
 │
 ├── src/
 │   │

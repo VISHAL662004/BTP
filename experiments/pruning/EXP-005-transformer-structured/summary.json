@@ -1,0 +1,13 @@
+{
+ "experiment": "EXP-005-transformer-structured",
+ "source": "experiments/cnn_transformer/EXP-003-cnn-transformer-s42",
+ "type": "structured",
+ "fine_tune": {
+  "epochs_per_level": 4,
+  "learning_rate": 0.0003,
+  "max_val_cpm_drop": 0.02
+ },
+ "reference_val_cpm": 0.7772397094430993,
+ "selected_level": null,
+ "selected": null
+}

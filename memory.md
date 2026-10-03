@@ -19,13 +19,13 @@ The AI should update this file whenever a significant project decision, implemen
 
 # Current State
 
-**Phase:** Phase 8 complete (attention: no measurable gain); awaiting researcher decision on the pruning base model before Phase 9
+**Phase:** Phase 9 complete (pruning studied for all 5 models, both methods); awaiting researcher decision on the final pruned model for Phase 10
 
-**Completed:** Phases 0–8
+**Completed:** Phases 0–9
 
 **In Progress:** None
 
-**Next Task:** Phase 9 — Progressive pruning. DECISION NEEDED: which unpruned reference to prune. Evidence so far (val CPM, 3 seeds): CNN-5slice 0.799, +CBAM 0.800, +SE 0.785, +Transformer 0.774. Recommendation: prune the plain 5-slice CNN (simplest, best cost/performance; Transformer/attention gave no measured benefit) and keep E2/E3 as negative-result rows in the ablation table. Pruning study design: structured (channel) vs unstructured, schedule, fine-tune, report params/FLOPs/latency/sparsity/CPM (rules.md sections 21–22: sparsity != speed-up must be measured).
+**Next Task:** Phase 10 — Complete model. DECISION NEEDED: which pruned model is the "final (pruned) model". Evidence (plain 5-slice CNN, seed 42): (A) unstructured 70% sparsity — pre-registered rule selects it: val 0.772, test 0.846 (dense 0.788/0.854), −70% non-zero params, effective 41.8 vs 109.7 MFLOPs, but NO latency gain (dense kernels); (B) structured 20% channels (−27% params): val 0.746 (fails rule by 0.02), test 0.852, latency −9% (MPS & CPU); structured 40% (−50% params): −28% MPS latency, test 0.829. Untested middle ground: ~10% structured, or longer recovery. Recommendation: final model = plain CNN; report both (A) compression and (B) speed-up variants; combining them (structured then unstructured) is untested.
 
 ---
 
@@ -152,6 +152,17 @@ No NFD or other auxiliary regularization term is used.
 * Interpretability (CBAM s42, val positives): spatial attention stages 1–2 ≈ tissue-density map (not nodule-specific); stages 3–4 near-saturated, only 8–11% higher inside nodule box than outside; channel gates differ pos-vs-neg mainly at stage 4 (mean |Δ| 0.26) ≈ 0 at stages 1–2. Descriptive, not causal.
 * Added `src/efficiency/memory.py` (hook-based activation/parameter memory, per sample) — first time memory is measured; computed for all models in `phase8_efficiency.csv`.
 * Mistake caught during phase: a stray shell line aborted one command batch (configs/tests not yet written); verified by listing files before re-running — always check what a failed batch actually wrote.
+
+---
+
+# Progressive pruning (Phase 9 results) — Gate 5
+
+* Code: `src/pruning/{masks,strategy,scheduler}.py` (global magnitude masks w/ nesting + per-layer 2% floor; structured channel pruning that physically rebuilds the net incl. SE/CBAM MLP slicing; schedules; pre-registered `select_final_level`), `Trainer(model=, post_step=)` hooks, `SimpleCNN(mid_widths=)`, `src/efficiency/flops.py::effective_flops`. Scripts: `scripts/prune.py` (one model×method, resumable), `scripts/run_phase9.py` (11 runs, 5h51m, log `experiments/pruning/phase9_run.log`), `scripts/compare_phase9.py` → `results/tables/phase9_*.{csv,json}`, `results/figures/phase9_*.png`; notebook `06_pruning_analysis.ipynb`. Outputs `experiments/pruning/EXP-005-<model>-<type>/` (levels.csv, summary.json, level_NN/{level.json,config,history}); checkpoints & predictions git-ignored.
+* Protocol (identical for all): seed-42 checkpoint → per level prune → fine-tune 4 epochs (AdamW lr 3e-4 cosine, best-val epoch) → evaluate. Unstructured sparsity 30/50/70/85/95%; structured channel ratio 20/40/55/70/80% (stages 1–3 outputs + all inner channels; last stage, Transformer/extra-conv module and head NOT pruned). Control: CNN fine-tuned 5×4 epochs without pruning. Selection rule fixed in advance: most-pruned level with val CPM ≥ reference val CPM − 0.02 (test never used).
+* Results (plain CNN, test CPM; ref 0.854): unstructured 0.844/0.829/0.846/0.845/0.790 at 30/50/70/85/95% sparsity; structured 0.852/0.829/0.762/0.641/0.619 at −27/−50/−65/−78/−85% params. Fine-tune control: val 0.783/0.776/0.781/0.755/0.753, test 0.833/0.822/0.842/0.831/0.824.
+* KEY FINDINGS: (1) unstructured ≈ free in accuracy to ~85% sparsity, collapses at 95% for every model; (2) **zero latency gain** from unstructured (24.4 ms MPS-256 / ~1.6 ms CPU-1 at every sparsity) although effective FLOPs fall 110→10 M; (3) structured gives real speed-up (CNN: −9% latency at −27% params, −28% at −50%, −47% at −65%, −70% at −85% (MPS-256); CPU-1 −9/−18/−36/−43/−53%) but loses accuracy sooner (clear loss vs control from −65% params); (4) Transformer/extra-conv reach only −45% params structured (unpruned 128-wide module); CNN family reaches −85%; (5) pre-registered selection: CNN unstructured L3 (70%); CBAM unstr L1 + struct L1; extra-conv unstr L1; Transformer unstr L2; none for SE (both), CNN/Transformer/extra-conv structured.
+* IMPORTANT CAVEAT on the rule: the reference is a best-of-20-epochs checkpoint (selection advantage), so even the no-pruning control fails the rule at later levels; the rule is stricter than "no accuracy loss". Kept as pre-registered; a post-hoc comparison with the control (`phase9_vs_control.csv`) is reported separately and labelled post-hoc. Val and test disagree at structured 20–40% (val −0.03…−0.06 vs control, test +0.004…+0.007): small loss unresolved. One seed per model/method; CI half-widths 0.03–0.05; level-to-level val noise ±0.02–0.03.
+* Latency pass: 66 checkpoints × 3 interleaved rounds on idle machine (the first pass differed slightly: structured CPU-1 −12/−21/−33% vs final −9/−18/−36%; use the table). Bugs fixed: effective-FLOPs double-counting (hooks registered before dense count); flaky SE test (random init); BN train/eval in structured test.
 
 ---
 

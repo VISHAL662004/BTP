@@ -27,8 +27,8 @@ def effective_flops(model: torch.nn.Module, input_shape) -> dict:
             macs = m.weight.numel() * (inp[0].numel() // inp[0].shape[-1])
         layer.append((2 * macs / input_shape[0], float((m.weight != 0).float().mean())))
 
+    dense = count_flops(model, input_shape)["flops_per_sample"]      # before hooks: avoid double counting
     hs = [m.register_forward_hook(hook) for m in model.modules() if isinstance(m, (torch.nn.Conv2d, torch.nn.Linear))]
-    dense = count_flops(model, input_shape)["flops_per_sample"]
     with torch.no_grad():
         model(torch.randn(*input_shape))
     for h in hs:

@@ -1,0 +1,32 @@
+{
+ "experiment": "EXP-005-convctrl-unstructured",
+ "source": "experiments/cnn_transformer/EXP-003c-cnn-extraconv-s42",
+ "type": "unstructured",
+ "fine_tune": {
+  "epochs_per_level": 4,
+  "learning_rate": 0.0003,
+  "max_val_cpm_drop": 0.02
+ },
+ "reference_val_cpm": 0.7869249394673122,
+ "selected_level": 1,
+ "selected": {
+  "level": 1,
+  "target": 0.3,
+  "val_cpm": 0.7736077481840195,
+  "test_cpm": 0.8231292517006803,
+  "val_sens@1": 0.788135593220339,
+  "test_sens@1": 0.8761904761904762,
+  "pre_ft_val_cpm": 0.7966101694915253,
+  "best_epoch_in_level": 3,
+  "seconds": 350.7571098804474,
+  "params_total": 598228,
+  "params_nonzero": 419262,
+  "sparsity_total": 0.29916018641721887,
+  "nonzero_reduction": 0.29916018641721887,
+  "flops_dense": 119161344.0,
+  "flops_effective": 90719819.1796875,
+  "activations_mb": 3.12296,
+  "parameters_mb_dense": 2.39888,
+  "prunable_sparsity": 0.3000006706548274
+ }
+}

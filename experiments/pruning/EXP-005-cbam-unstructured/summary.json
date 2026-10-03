@@ -1,0 +1,32 @@
+{
+ "experiment": "EXP-005-cbam-unstructured",
+ "source": "experiments/attention/EXP-004-attention-cbam-s42",
+ "type": "unstructured",
+ "fine_tune": {
+  "epochs_per_level": 4,
+  "learning_rate": 0.0003,
+  "max_val_cpm_drop": 0.02
+ },
+ "reference_val_cpm": 0.7941888619854721,
+ "selected_level": 1,
+ "selected": {
+  "level": 1,
+  "target": 0.3,
+  "val_cpm": 0.784503631961259,
+  "test_cpm": 0.8244897959183674,
+  "val_sens@1": 0.8389830508474576,
+  "test_sens@1": 0.8952380952380953,
+  "pre_ft_val_cpm": 0.7893462469733655,
+  "best_epoch_in_level": 3,
+  "seconds": 576.5468819141388,
+  "params_total": 314380,
+  "params_nonzero": 220521,
+  "sparsity_total": 0.2985527069151982,
+  "nonzero_reduction": 0.2985527069151982,
+  "flops_dense": 110833920.0,
+  "flops_effective": 81952755.55332947,
+  "activations_mb": 3.098448,
+  "parameters_mb_dense": 1.261424,
+  "prunable_sparsity": 0.30000127880508454
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "level": 3,
+ "target": 0.7,
+ "val_cpm": 0.7469733656174334,
+ "test_cpm": 0.8312925170068027,
+ "val_sens@1": 0.7966101694915254,
+ "test_sens@1": 0.8666666666666667,
+ "pre_ft_val_cpm": 0.4067796610169491,
+ "best_epoch_in_level": 3,
+ "seconds": 372.2219099998474,
+ "params_total": 570068,
+ "params_nonzero": 175503,
+ "sparsity_total": 0.6921367275482925,
+ "nonzero_reduction": 0.6921367275482925,
+ "flops_dense": 118374912.0,
+ "flops_effective": 39321205.8046875,
+ "activations_mb": 3.319568,
+ "parameters_mb_dense": 2.284176,
+ "prunable_sparsity": 0.700000354821312
+}

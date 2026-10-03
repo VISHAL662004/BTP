@@ -127,3 +127,16 @@ def test_selection_rule():
     rows2 = [{"level": 1, "val_cpm": 0.79}, {"level": 2, "val_cpm": 0.50}, {"level": 3, "val_cpm": 0.79}]
     assert select_final_level(rows2, 0.80, 0.02)["level"] == 3       # non-monotone: highest acceptable level
     assert select_final_level([{"level": 1, "val_cpm": 0.1}], 0.8) is None
+
+
+def test_effective_flops_dense_equal_and_decreasing_with_sparsity():
+    from src.efficiency.flops import effective_flops
+    m, _ = _model("baseline")
+    d = effective_flops(m, (1, 5, 64, 64))
+    assert abs(d["flops_effective"] - d["flops_dense"]) / d["flops_dense"] < 1e-4        # no pruning -> equal (head.box is zero-initialised by design: 192 true zeros)
+    apply_masks(m, compute_global_masks(m, 0.5))
+    e50 = effective_flops(m, (1, 5, 64, 64))["flops_effective"]
+    apply_masks(m, compute_global_masks(m, 0.9, compute_global_masks(m, 0.5)))
+    e90 = effective_flops(m, (1, 5, 64, 64))["flops_effective"]
+    assert 0 < e90 < e50 < d["flops_dense"]
+    assert e50 > 0.3 * d["flops_dense"]          # not wildly below dense (global pruning favours small layers, but weights remain)
