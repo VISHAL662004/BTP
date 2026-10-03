@@ -30,8 +30,11 @@ def make_logger(path: Path) -> logging.Logger:
 
 
 class Trainer:
-    def __init__(self, cfg: dict, out_dir):
+    def __init__(self, cfg: dict, out_dir, model=None, post_step=None):
+        """`model`: use an existing (e.g. pruned) model instead of building one from cfg.
+        `post_step`: callable run after every optimizer step (e.g. re-apply pruning masks)."""
         self.cfg, self.out = cfg, Path(out_dir)
+        self.post_step = post_step
         self.out.mkdir(parents=True, exist_ok=True)
         if (self.out / "best.pt").exists():
             raise FileExistsError(f"{self.out} already has results; never overwrite experiments (rules.md)")
@@ -42,7 +45,7 @@ class Trainer:
         d = cfg["data"]
         self.train = PatchStore(d["cache_dir"], "train", d["channels"])
         self.val = PatchStore(d["cache_dir"], "val", d["channels"])
-        self.model = build_detector(cfg).to(self.device)
+        self.model = (model if model is not None else build_detector(cfg)).to(self.device)
         l = cfg["loss"]
         self.loss = DetectionLoss(l["lambda_cls"], l["lambda_loc"], l["focal_alpha"], l["focal_gamma"])
         t = cfg["training"]
@@ -85,6 +88,8 @@ class Trainer:
             loss.backward()
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), 5.0)
             self.opt.step()
+            if self.post_step is not None:
+                self.post_step()
             for k in agg:
                 agg[k] += parts[k] * len(b)
             n += len(b)

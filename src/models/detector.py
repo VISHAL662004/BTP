@@ -24,6 +24,7 @@ def build_detector(cfg: dict) -> Detector:
         raise ValueError(f"Unknown backbone {m['backbone']!r}")
     attn = m.get("attention")            # False/None/{'type': ...}; older configs store `false`
     bb = SimpleCNN(m["in_channels"], tuple(m["widths"]), attn if isinstance(attn, dict) else None,
-                   attn.get("stages") if isinstance(attn, dict) else None)
+                   attn.get("stages") if isinstance(attn, dict) else None,
+                   tuple(m["mid_widths"]) if m.get("mid_widths") else None)
     return Detector(bb, DetectionHead(bb.out_channels, m.get("head_hidden", 64), m.get("dropout", 0.2)),
                     build_context(m, bb.out_channels))

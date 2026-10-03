@@ -37,9 +37,13 @@ def test_cbam_spatial_map_shape_and_content_dependence():
 
 
 def test_channel_gate_depends_on_content():
+    torch.manual_seed(0)
     m = SqueezeExcitation(8).eval(); m.keep = True
-    m(torch.zeros(1, 8, 4, 4)); g0 = m.last_gate.clone()
-    m(torch.randn(1, 8, 4, 4) * 5)
+    for p in m.parameters():                           # avoid the degenerate all-ReLUs-off init
+        p.data.normal_(0, 1.0)
+    a = torch.linspace(-3, 3, 8)[None, :, None, None].expand(1, 8, 4, 4)
+    m(a); g0 = m.last_gate.clone()
+    m(-a)
     assert not torch.allclose(g0, m.last_gate)
 
 
